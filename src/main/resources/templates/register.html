@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Spring Security Example </title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>Register Account</h1>
+                <p class="lead">Register accounts for extra perks</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form autocomplete="off" action="#" th:action="@{/register}"
+                  th:object="${person}" method="post" class="m-t" role="form"
+                  data-toggle="validator">
+
+                <div th:if="${confirmationMessage}" class="alert alert-success"
+                     role="alert" th:text=${confirmationMessage}></div>
+
+                <div th:if="${errorMessage}"
+                     class="alert alert-danger" role="alert"
+                     th:text="${errorMessage}"></div>
+
+                <div th:if="${alreadyRegisteredMessage}"
+                     class="alert alert-danger" role="alert"
+                     th:text="${alreadyRegisteredMessage}"></div>
+
+
+                <div th:if="${#fields.hasErrors('firstName')}"
+                     th:errors="*{firstName}"
+                     class="validation-message alert alert-danger" role="alert"></div>
+
+                <div th:if="${#fields.hasErrors('lastName')}"
+                     th:errors="*{lastName}"
+                     class="validation-message alert alert-danger" role="alert"></div>
+
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                     class="validation-message alert alert-danger" role="alert"></div>
+
+                <div class="form-group has-feedback">
+                    <label th:if="${#fields.hasErrors('firstName')}"
+                           th:errors="*{firstName}" class="validation-message"></label>
+                    <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-person"></span>
+                  </span>
+
+                    <input type="text" th:field="*{firstName}"
+                           placeholder="First Name" class="form-control input-lg" required autofocus />
+                    <span class="glyphicon form-control-feedback"
+                          aria-hidden="true" ></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-person"></span>
+                  </span>
+                    <input type="text" th:field="*{lastName}"
+                           placeholder="Last Name" class="form-control input-lg" required />
+                    <span class="glyphicon form-control-feedback"
+                          aria-hidden="true"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                  <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-envelope"></span>
+                  </span>
+                    <input type="email" th:field="*{email}"
+                           placeholder="Email Address" class="form-control input-lg"
+                           data-error="This email address is invalid" required />
+                    <span class="glyphicon form-control-feedback"
+                          aria-hidden="true"></span>
+
+                </div>
+
+
+                <fieldset>
+                    <legend>Registeration Type</legend>
+                    <div class="form-group">
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio1" name="usertype" class="custom-control-input" checked="" value="user">
+                            <label class="custom-control-label" for="customRadio1" onclick='$(".mbiddiv").hide()'>User</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio2" name="usertype" class="custom-control-input" value="artist">
+                            <label class="custom-control-label" for="customRadio2" onclick='$(".mbiddiv").show()'>Artist</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio3" name="usertype" class="custom-control-input" value="editor">
+                            <label class="custom-control-label" for="customRadio3" onclick='$(".mbiddiv").hide()'>Editor</label>
+                        </div>
+                        <div class="custom-control custom-radio">
+                            <input type="radio" id="customRadio4" name="usertype" class="custom-control-input" value="admin">
+                            <label class="custom-control-label" for="customRadio4" onclick='$(".mbiddiv").hide()'>Admin</label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <div class="form-group" id="mbiddiv">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                    <input name="mbid" type="text" id="mbid" placeholder="MusicBrainz ID (Optional)" class="form-control" />
+                    <span class="glyphicon" aria-hidden="true"></span>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Register"/>
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2">
+
+                    </div>
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <a href="/login" class="btn btn-outline-success btn-lg btn-block">Sign In</a>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+<script>
+    $(document).ready(function(){
+        $("#mbiddiv").hide();
+        $("#customRadio1, #customRadio3, #customRadio4").click(function(){
+            $("#mbiddiv").hide();
+        });
+        $("#customRadio2").click(function(){
+            $("#mbiddiv").show();
+        });
+    });
+</script>
+
+</body>
+</html>

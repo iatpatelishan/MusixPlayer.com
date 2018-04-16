@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <title>Spring Security Example </title>
+    <div th:replace="fragments/header :: header-css"/>
+
+</head>
+<body>
+
+<div th:replace="fragments/header :: header"/>
+
+<div class="container">
+
+    <div class="page-header" id="banner">
+        <div class="row">
+            <div class="col-lg-8 col-md-7 col-sm-6">
+                <h1>Set Up Account</h1>
+                <p class="lead">Setup your account to start using it</p>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text=${successMessage}></div>
+
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text=${errorMessage}></div>
+
+            <div th:if="${invalidToken}" class="alert alert-danger" role="alert" th:text=${invalidToken}></div>
+
+            <form th:if="!${invalidToken}" class="m-t" id="passwordForm" role="form" action="#"
+                   th:action="@{/confirm}" method="post">
+                <input type="hidden" name="token" th:value=${confirmationToken}  >
+                <div class="form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                    <input name="username" type="text" id="username" placeholder="Username" class="form-control" required />
+                    <span class="glyphicon" aria-hidden="true"></span>
+                </div>
+
+                <div class="form-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                    <input name="password" type="password" id="password" placeholder="Password" class="form-control" required />
+                    <span class="glyphicon" aria-hidden="true"></span>
+                </div>
+
+                <div class="form-group has-feedback">
+                <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-lock"></span>
+                </span>
+                    <input type="password" class="form-control" id="signup-password-confirm" placeholder="Confirm Password" name="ConfirmPassword" data-fv-notempty="true"
+                           data-fv-notempty-message="Please confirm password"
+                           data-fv-identical="true"
+                           data-fv-identical-field="password"
+                           data-fv-identical-message="Both passwords must be identical" />
+                    <div class="help-block with-errors"></div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6 col-sm-6 col-md-6">
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Confirm Account</button>
+                    </div>
+                </div>
+
+
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="fragments/footer :: footer"/>
+
+
+
+</body>
+</html>

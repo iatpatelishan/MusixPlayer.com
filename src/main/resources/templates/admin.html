@@ -1,0 +1,71 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+<div class="mycontainer">
+    <div th:replace="fragments/header :: header"/>
+
+    <div class="container">
+
+        <div class="starter-template">
+
+
+            <h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h2>
+            Fetch and Update Top 500 Songs in
+
+            <form th:action="@{/admin/fetchtop500songs}" method="post">
+                <select name="country">
+                    <option value="United States">USA</option>
+                    <option value="Canada">Canada</option>
+                    <option value="India">India</option>
+                    <option value="Spain">Spain</option>
+                    <option value="Italy">Italy</option>
+                    <option value="Japan">Japan</option>
+                    <option value="China">China</option>
+                </select>
+                <br><br>
+                <input type="submit" value="Submit" class="btn btn-primary"/>
+            </form>
+
+
+            <div th:if="${successMessage}" class="alert alert-success" role="alert" th:text=${successMessage}></div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert" th:text=${errorMessage}></div>
+
+            <br/><br/><br/><br/>
+            <h4>List of Users</h4>
+
+            <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>id</th>
+                    <th>fName</th>
+                    <th>lname</th>
+                    <th>type</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="person : ${listOfUsers}">
+                    <td th:text="${person.id}"></td>
+                    <td th:text="${person.getFirstName()}"></td>
+                    <td th:text="${person.getLastName()}"></td>
+                    <td th:text="${person.getRole().getName()}"></td>
+                    <td>Update</td>
+                    <td>Delete</td>
+                </tr>
+                </tbody>
+            </table>
+
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
