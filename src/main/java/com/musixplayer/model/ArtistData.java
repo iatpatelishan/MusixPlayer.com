@@ -17,10 +17,10 @@ public class ArtistData {
     @Setter
     private Long id;
 
-    @Column(name = "mbId")
+    @Column(name = "mbid")
     @Getter
     @Setter
-    String mbId;
+    String mbid;
 
     @Column(name = "country")
     @Getter
@@ -52,15 +52,19 @@ public class ArtistData {
     @Setter
     String image;
 
+    @Column(name = "lastfm_url")
+    @Getter
+    @Setter
+    String lastfmUrl;
+
+    @Column(name = "description", length = 10000)
+    @Getter
+    @Setter
+    private String description;
+
     @ManyToMany(mappedBy = "artists")
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Song> songs;
-
-    @OneToOne(cascade = {CascadeType.ALL},fetch = FetchType.LAZY,mappedBy = "artistData")
-    @JsonIgnore
-    private Artist artist;
-
-
 }

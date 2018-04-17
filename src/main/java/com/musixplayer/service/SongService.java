@@ -18,98 +18,91 @@ import java.util.Optional;
 public class SongService {
 
     private final SongRepository songRepository;
-    private final ArtistDataRepository artistDataRepository;
     private final ArtistDataService artistDataService;
+    private final ProxyService proxyService;
 
 
     @Autowired
-    public SongService(SongRepository songRepository,ArtistDataService artistDataService,ArtistDataRepository artistDataRepository) {
+    public SongService(SongRepository songRepository, ArtistDataService artistDataService, ProxyService proxyService) {
         this.songRepository = songRepository;
         this.artistDataService = artistDataService;
-        this.artistDataRepository = artistDataRepository;
+        this.proxyService = proxyService;
     }
 
 
-    public Song create(Song song){
-
+    public Song create(Song song) {
         String newMbid = song.getMbId();
         Optional<Song> exisitingSong = findSongByMbid(newMbid);
-
-        if(!exisitingSong.isPresent()){
-
+        if (!exisitingSong.isPresent()) {
             return songRepository.save(song);
-        }
-        else
+        } else {
             return exisitingSong.get();
+        }
     }
 
-    public Collection<Song> findAll(){
+    public Collection<Song> findAll() {
         return songRepository.findAll();
     }
 
-    public Optional<Song> findSongByMbid(String mbid){
+    public Optional<Song> findSongByMbid(String mbid) {
         return songRepository.findByMbId(mbid);
     }
 
-    public Song fetchSongandAdd(String mbid){
-
-        Optional<Song>  checksong = songRepository.findByMbId(mbid);
-        if(checksong.isPresent()){
+    public Song fetchSongandAdd(String mbid) {
+        // if exists, then return existing
+        Optional<Song> checksong = songRepository.findByMbId(mbid);
+        if (checksong.isPresent()) {
             return checksong.get();
         }
 
-        String uri = "http://ws.audioscrobbler.com/2.0/?method=track.getInfo&api_key=ecc8416e699592148ea368f3a381a819&mbid="+mbid+"&track=believe&format=json";
-        RestTemplate restTemplate = new RestTemplate();
-        String result = restTemplate.getForObject(uri, String.class);
-
+        String result = (String) proxyService.searchSongInLastfmByMbId(mbid);
         Song song = new Song();
-
-        try{
+        try {
             JsonNode jsonsong = new ObjectMapper().readTree(result).get("track");
 
             String artistmbId = jsonsong.get("artist").get("mbid").textValue();
-            String artistName = jsonsong.get("artist").get("name").textValue();
-            ArtistData artistData = new ArtistData();
-            artistData.setMbId(artistmbId);
-            artistData.setName(artistName);
-            artistData = artistDataService.fetchArtistDataandAdd(artistData);
+            if(artistmbId.length()<20){
+                return null;
+            }
+            ArtistData artistData = artistDataService.fetchArtistDataandAdd(artistmbId);
+            if(artistData==null){
+                return null;
+            }
 
             String songname = jsonsong.get("name").textValue();
             Integer duration = Integer.parseInt(jsonsong.get("duration").textValue());
             String lastFmUrl = jsonsong.get("url").textValue();
             Iterator<JsonNode> images = jsonsong.get("album").get("image").elements();
-            String imageUrl=null;
-            while(images.hasNext()) {
+            String imageUrl = null;
+            while (images.hasNext()) {
                 JsonNode imagenode = images.next();
-                imageUrl=imagenode.get("#text").textValue();
+                imageUrl = imagenode.get("#text").textValue();
             }
-            String description="";
-            if(jsonsong.has("wiki") && jsonsong.get("wiki").has("summary")){
+            String description = "";
+            if (jsonsong.has("wiki") && jsonsong.get("wiki").has("summary")) {
                 description = jsonsong.get("wiki").get("summary").textValue();
             }
 
             Collection<ArtistData> artists = new ArrayList<ArtistData>();
             artists.add(artistData);
-
-            song = new Song(mbid,songname,description,duration,lastFmUrl,imageUrl,artists);
-            song = songRepository.save(song);
+            song = new Song(mbid, songname, description, duration, lastFmUrl, imageUrl, artists);
+            song = create(song);
 
             Collection<Song> songs = artistData.getSongs();
-            if(songs == null || (!songs.contains(song))){
-                if(songs==null){
-                    songs = new ArrayList<Song>();
-                }
+            if (songs == null) {
+                songs = new ArrayList<Song>();
+            }
+            if (!songs.contains(song)) {
                 songs.add(song);
                 artistData.setSongs(songs);
-                artistData=artistDataRepository.save(artistData);
+                artistData = artistDataService.create(artistData);
             }
-
-        }
-        catch (IOException e) {
+            return song;
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        return song;
+        return null;
     }
 
 

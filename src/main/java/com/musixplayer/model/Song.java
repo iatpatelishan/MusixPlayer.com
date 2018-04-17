@@ -28,7 +28,7 @@ public class Song {
     @Setter
     private String name;
 
-    @Column(name = "description", length = 1000)
+    @Column(name = "description", length = 10000)
     @Getter
     @Setter
     private String description;
