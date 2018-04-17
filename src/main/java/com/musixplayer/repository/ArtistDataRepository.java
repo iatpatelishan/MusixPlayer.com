@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface ArtistDataRepository extends JpaRepository<ArtistData, Long> {
 
 
-    @Query("SELECT u FROM ArtistData u WHERE u.mbId=:mbid")
-    Optional<ArtistData> findByMbId(@Param("mbid") String u);
+    @Query("SELECT u FROM ArtistData u WHERE u.mbid=:mbid")
+    Optional<ArtistData> findByMbId(@Param("mbid") String mbid);
 
 }

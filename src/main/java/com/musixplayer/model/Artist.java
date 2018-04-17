@@ -13,7 +13,7 @@ public class Artist extends Person {
 
     @OneToOne
     @JsonIgnore
-    @JoinColumn(name = "mbID", referencedColumnName = "mbId")
+    @JoinColumn(name = "artistdata_id", referencedColumnName = "artistData_id")
     @Getter @Setter ArtistData artistData;
 
     @OneToMany(mappedBy="artist")

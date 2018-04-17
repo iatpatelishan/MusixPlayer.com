@@ -106,7 +106,7 @@ public class RegisterController {
             if(artistData==null) {
                 mbid=UUID.randomUUID().toString().substring(0,32);
                 artistData = new ArtistData();
-                artistData.setMbId(mbid);
+                artistData.setMbid(mbid);
                 artistData= artistDataService.create(artistData);
             }
             artist.setArtistData(artistData);

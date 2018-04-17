@@ -27,7 +27,7 @@ public class Top500Songs {
     @JsonIgnore
     @Getter
     @Setter
-    private Collection<Song> songs = new ArrayList<>();;
+    private Collection<Song> songs;
 
     // constructors
     public Top500Songs() {

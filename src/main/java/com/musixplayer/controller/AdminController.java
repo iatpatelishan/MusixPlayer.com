@@ -81,7 +81,8 @@ public class AdminController {
             JsonNode songsNode = new ObjectMapper().readTree(result).get("tracks").get("track");
 
             Iterator<JsonNode> iterator = songsNode.elements();
-            top500SongsService.deleteAllByCountry(country);
+
+            top500SongsService.emptyAllSongsByCountry(country);
 
             while(iterator.hasNext()) {
 
