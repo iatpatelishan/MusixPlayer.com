@@ -15,8 +15,12 @@
     <div class="starter-template">
         <h1>Top Songs in <span th:text="${country}"></span> </h1>
 
+        <div th:if="${(listOfTop500Songs == null)}">
+            <h2>Oops!! No top songs for this country </h2>
+        </div>
+
         <div class="card-columns"  style="column-count: 5;">
-            <div class="card" th:each="song : ${listOfTop500Songs}">
+            <div class="card" th:each="song : ${listOfTop500Songs}" th:if="listOfTop500Songs != null">
                 <a th:href="'/song/' + ${song.getMbId()}">  <img class="card-img-top" th:src="${song.getImageUrl()}" alt="Card image cap" style="height:200px;width:200px;"></a>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${song.getName()}"></h5>

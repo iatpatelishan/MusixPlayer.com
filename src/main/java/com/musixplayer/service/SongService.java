@@ -113,4 +113,19 @@ public class SongService {
     }
 
 
+    public Song updateSongViews(int views, Long songId){
+
+        if(songRepository.findById(songId).isPresent()){
+
+            Song song = songRepository.findById(songId).get();
+            song.setViews(views);
+            songRepository.save(song);
+            return song;
+
+        }
+
+        else return  null;
+
+    }
+
 }

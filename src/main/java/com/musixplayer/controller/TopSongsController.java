@@ -1,6 +1,7 @@
 package com.musixplayer.controller;
 
 import com.musixplayer.model.Person;
+import com.musixplayer.model.Top500Songs;
 import com.musixplayer.service.SongService;
 import com.musixplayer.service.Top500SongsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Collection;
 
 @Controller
 @RequestMapping("/top")
@@ -28,8 +31,16 @@ public class TopSongsController {
     @GetMapping("/{country}")
     public ModelAndView showTopSongs(ModelAndView modelAndView, @PathVariable("country") String country){
         modelAndView.addObject("country", country);
-        modelAndView.addObject("listOfTop500Songs", top500SongsService.findTopSongsByCountry(country).getSongs());
-        modelAndView.setViewName("topsongs");
-        return modelAndView;
+        if(top500SongsService.findTopSongsByCountry(country) !=null) {
+            modelAndView.addObject("listOfTop500Songs", top500SongsService.findTopSongsByCountry(country).getSongs());
+            modelAndView.setViewName("topsongs");
+            return modelAndView;
+        }
+        else {
+
+            modelAndView.addObject("listOfTop500Songs", null);
+            modelAndView.setViewName("topsongs");
+            return modelAndView;
+        }
     }
 }

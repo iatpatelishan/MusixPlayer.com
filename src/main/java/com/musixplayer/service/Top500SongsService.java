@@ -69,7 +69,11 @@ public class Top500SongsService {
 
     public Top500Songs findTopSongsByCountry(String country){
 
-        return top500SongsRepository.findByCountry(country).get();
+        if(top500SongsRepository.findByCountry(country).isPresent())
+             return top500SongsRepository.findByCountry(country).get();
+        else
+            return null;
+
 
     }
 
