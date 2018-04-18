@@ -1,5 +1,6 @@
 package com.musixplayer.controller;
 
+import com.musixplayer.model.ArtistData;
 import com.musixplayer.model.Song;
 import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Controller
@@ -71,9 +73,6 @@ public class SongController {
         }else{
             modelAndView.addObject("songDescription", song.getDescription());
         }
-
-
-
 
         modelAndView.setViewName("song");
         return modelAndView;

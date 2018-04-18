@@ -27,9 +27,9 @@
                 <p><span th:utext="${artistDescription}"></span></p>
                 <br>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><h3>Artist</h3></li>
+                    <li class="list-group-item"><h3>Songs by this artist</h3></li>
                     <div class="card" th:each="song : ${listOfSongs}" th:if="listOfSongs != null">
-                        <li class="list-group-item "><a th:href="'/song/' + ${song.getMbid()}"><span th:text="${song.getName()}"></span></a></li>
+                        <li class="list-group-item "><a th:href="'/song/' + ${song.getMbId()}"><span th:text="${song.getName()}"></span></a></li>
                     </div>
                 </ul>
             </div>
@@ -43,10 +43,9 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
+</div>
     <!-- /.container -->
     <div th:replace="fragments/footer :: footer"/>
 

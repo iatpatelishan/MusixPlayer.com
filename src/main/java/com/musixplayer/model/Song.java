@@ -58,8 +58,6 @@ public class Song {
     @Setter
     private Integer views;
 
-
-
     @Column(name = "created", insertable = false, updatable = false)
     @Getter
     @Setter

@@ -85,4 +85,10 @@ public class ArtistDataService {
 
         return null;
     }
+
+
+    public Optional<ArtistData> findArtistDataById(Long id){
+
+        return artistDataRepository.findById(id);
+    }
 }
