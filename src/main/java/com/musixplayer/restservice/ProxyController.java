@@ -25,9 +25,9 @@ public class ProxyController {
         return proxyService.searchSongLastfm(searchword,searchtype);
     }
 
-    @GetMapping(value = "/api/search/youtube", produces = "application/json; charset=UTF-8")
+    /*@GetMapping(value = "/api/search/youtube", produces = "application/json; charset=UTF-8")
     public Object searchSongYoutube(@RequestParam(name="search", required=false) String searchword) {
-       return proxyService.searchSongYoutube(searchword);
-    }
+       return proxyService.searchSongYoutubeURL(searchword);
+    }*/
 
 }

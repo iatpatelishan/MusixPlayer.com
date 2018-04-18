@@ -5,139 +5,160 @@
 
     <div th:replace="fragments/header :: header-css"/>
     <style>
-        section{
-            padding: $spacer*2 0;
+        section {
+            padding: $ spacer *2 0;
         }
 
         @include media-breakpoint-up(sm) {
-            section{
-                padding: $spacer*3 0;
+            section {
+                padding: $ spacer *3 0;
             }
         }
 
-        .space-0{
+        .space-0 {
             padding: 0;
         }
 
-        .space-xxs{
-            padding-top: $spacer/2;
-            padding-bottom: $spacer/2;
+        .space-xxs {
+            padding-top: $ spacer / 2;
+            padding-bottom: $ spacer / 2;
         }
 
-        .space-xs{
-            padding-top: $spacer;
-            padding-bottom: $spacer;
+        .space-xs {
+            padding-top: $ spacer;
+            padding-bottom: $ spacer;
         }
 
-        .space-sm{
-            padding-top: $spacer*2;
-            padding-bottom: $spacer*2;
+        .space-sm {
+            padding-top: $ spacer *2;
+            padding-bottom: $ spacer *2;
         }
 
         @include media-breakpoint-up(lg) {
-            .space-lg{
-                padding-top: $spacer*5;
-                padding-bottom: $spacer*5;
+            .space-lg {
+                padding-top: $ spacer *5;
+                padding-bottom: $ spacer *5;
             }
-            .space-xlg{
-                padding-top: $spacer*7;
-                padding-bottom: $spacer*7;
-            }
-        }
 
-        @include media-breakpoint-down(lg) {
-            .space-lg{
-                padding-top: $spacer*2;
-                padding-bottom: $spacer*2;
-            }
-            .space-xlg{
-                padding-top: $spacer*3;
-                padding-bottom: $spacer*3;
+            .space-xlg {
+                padding-top: $ spacer *7;
+                padding-bottom: $ spacer *7;
             }
         }
 
         @include media-breakpoint-down(lg) {
-            .main-container > section.space-xlg:first-child{
-                padding-top: $spacer* 5;
+            .space-lg {
+                padding-top: $ spacer *2;
+                padding-bottom: $ spacer *2;
+            }
+
+            .space-xlg {
+                padding-top: $ spacer *3;
+                padding-bottom: $ spacer *3;
             }
         }
 
-        section:not([class*='bg-']) + section:not([class*='bg-']){
-            border-top: $hr-border-width solid $hr-border-color;
+        @include media-breakpoint-down(lg) {
+            .main-container > section.space-xlg:first-child {
+                padding-top: $ spacer *5;
+            }
         }
 
-        section.bg-dark+section.bg-dark{
-            border-top: $hr-border-width solid $gray-800;
+        section:not([class*='bg-']) + section:not([class*='bg-']) {
+            border-top: $ hr-border-width solid $ hr-border-color;
         }
 
-        // Spacing Utilities
-        //
-        // Adjustments to default Bootstrap spacing utilities for tighter mobile spacing
+        section.bg-dark + section.bg-dark {
+            border-top: $ hr-border-width solid $ gray-800;
+        }
+
+        /
+        /
+        Spacing Utilities
+
+        /
+        /
+        /
+        /
+        Adjustments to default Bootstrap spacing utilities for tighter mobile spacing
 
         @include media-breakpoint-down(xs) {
-            .mb-5{
+            .mb-5 {
                 margin-bottom: 1.5rem !important;
             }
         }
 
-        section + section.flush-with-above{
+        section + section.flush-with-above {
             border-top: none !important;
             padding-top: 0;
         }
 
-        // Margins
-        //
-        // Extension of Bootstrap m- classes
+        /
+        /
+        Margins
 
-           [class*='mt--'],[class*='mb--']{
-               position: relative;
-               z-index: 2;
-           }
+        /
+        /
+        /
+        /
+        Extension of Bootstrap m- classes
+        [class*='mt--'], [class*='mb--'] {
+            position: relative;
+            z-index: 2;
+        }
 
         @include media-breakpoint-up(lg) {
-            .mt--8{
+            .mt--8 {
                 margin-top: -8rem;
             }
-            .mb--8{
+
+            .mb--8 {
                 margin-bottom: -8rem;
             }
         }
 
-        .bg-image{
+        .bg-image {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             z-index: 0;
-        + .card-body{
+
+        + .card-body {
             position: relative;
             z-index: 1;
         }
+
         }
 
-        img.bg-image{
+        img.bg-image {
             object-fit: cover;
         }
+
         lead {
             margin-bottom: 1.5rem;
             line-height: 1.875rem;
             display: block;
             font-weight: 400;
         }
+
         .lead {
             font-size: 1.25rem;
             font-weight: 300;
         }
+
         .form-control-borderless, .form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
             border: none;
             outline: none;
             box-shadow: none;
         }
+
         .search-card-body {
             padding: 0.55rem;
             z-index: 1000;
         }
+
         .ls_result_div {
             position: absolute;
             background-color: #fff;
@@ -151,6 +172,7 @@
             -o-border-radius: 4px;
             z-index: 500;
         }
+
         .ls_result_main {
             overflow: auto;
         }
@@ -159,10 +181,10 @@
 <body>
 
 <div class="mycontainer">
-<div th:replace="fragments/header :: header"/>
+    <div th:replace="fragments/header :: header"/>
 
-    <section class="bg-dark text-white space-xlg">
-        <img alt="Image" src="https://i.imgur.com/bpJ0i51.jpg" class="bg-image opacity-40">
+    <section class="bg-dark text-white space-xlg" style="max-height: 500px;">
+        <img alt="Image" src="https://i.imgur.com/bpJ0i51.jpg" class="bg-image opacity-40" style="max-height: 450px;">
         <div class="container">
             <div class="row text-center justify-content-center section-intro">
                 <div class="col-12 col-md-10 col-lg-8">
@@ -177,11 +199,13 @@
                     <form class="card card-sm">
                         <div class="card-body row no-gutters align-items-center search-card-body">
                             <div class="col-auto">
-                                <i class="fas fa-search" style="color: grey; height: 25px; width: 25px;margin-left: 10px"></i>
+                                <i class="fas fa-search"
+                                   style="color: grey; height: 25px; width: 25px;margin-left: 10px"></i>
                             </div>
                             <!--end of col-->
                             <div class="col">
-                                <input class="form-control form-control-lg form-control-borderless search-input" type="search" placeholder="Search for Songs and Artists" id="searchinput">
+                                <input class="form-control form-control-lg form-control-borderless search-input"
+                                       type="search" placeholder="Search for Songs and Artists" id="searchinput">
                             </div>
                             <!--end of col-->
                             <div class="col-auto" style="margin-right: 10px;">
@@ -191,7 +215,7 @@
                                 </select>
                             </div>
                             <div class="col-auto">
-                                <button class="btn btn-lg btn-success" >Search</button>
+                                <button class="btn btn-lg btn-success">Search</button>
                             </div>
                             <!--end of col-->
                         </div>
@@ -200,32 +224,38 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-10 col-lg-8">
-                    <div class="ls_result_div" style="left: 63.25px; width: 548px; display: inherit; color: black"><div class="ls_result_main">
-                        <table id="searchtable" class="table table-striped" style="margin-bottom: 0px;">
-                            <tbody>
-                            </tbody>
-                        </table>
-                    </div></div></div>
+                    <div class="ls_result_div" style="left: 63.25px; width: 548px; display: inherit; color: black">
+                        <div class="ls_result_main">
+                            <table id="searchtable" class="table table-striped" style="margin-bottom: 0px;">
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <!--end of col-->
             </div>
-            <!--end of row-->
-            <br/><br/>
+            <!--end of col-->
         </div>
-        <!--end of container-->
-    </section>
+        <!--end of row-->
+        <br/><br/>
+</div>
+<!--end of container-->
+</section>
 
 
-    <div class="container clearfix">
+<div class="container clearfix">
 
-    <div class="starter-template">
+    <div class="starter-template" style="margin-top: 50px">
         <h1>Top 50 Global Songs</h1>
-        <div class="card-columns"  style="column-count: 5;">
+        <div class="card-columns" style="column-count: 5;">
             <div class="card" th:each="song : ${listOfTop500Songs}">
-                <a th:href="'/song/' + ${song.getMbId()}">  <img class="card-img-top" th:src="${song.getImageUrl()}" alt="Card image cap"></a>
+                <a th:href="'/song/' + ${song.getMbId()}"> <img class="card-img-top" th:src="${song.getImageUrl()}"
+                                                                alt="Card image cap"></a>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${song.getName()}"></h5>
-                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    <p class="card-text">
+                        <small class="text-muted">Last updated 3 mins ago</small>
+                    </p>
                 </div>
             </div>
         </div>
@@ -237,83 +267,81 @@
 <div th:replace="fragments/footer :: footer"/>
 
 <script type="text/javascript">
-$( document ).ready(function() {
-    var ajaxReq = null;
-    var searchFunction = function() {
-        var searchword = $('#searchinput').val();
-        var searchtype = $('#searchtype').val();
-        if(searchtype=="1") {
-            var searchurl = '/api/search?type=song&search='+ searchword;
-        }else{
-            var searchurl = '/api/search?type=artist&search='+ searchword;
-        }
-        console.log(searchurl);
+    $(document).ready(function () {
+        var ajaxReq = null;
+        var searchFunction = function () {
+            var searchword = $('#searchinput').val();
+            var searchtype = $('#searchtype').val();
+            if (searchtype == "1") {
+                var searchurl = '/api/search?type=song&search=' + searchword;
+            } else {
+                var searchurl = '/api/search?type=artist&search=' + searchword;
+            }
+            console.log(searchurl);
 
-        if ((searchword.length) >= 3) {
-            if (ajaxReq === null) {
-                ajaxReq = $.ajax({
-                    url: searchurl,
-                    dataType: "json",
-                    success: function (response) {
-                        console.log(response);
-                        $("#searchtable").show();
-                        if(searchtype=="1") {
-                            var name = response['results']['trackmatches']['track'];
-                            var count = 0;
-                            $("#searchtable").html("<thead> <tr> <th scope=\"col\">#</th> <th scope=\"col\">Name</th> <th scope=\"col\">Artist</th></tr><tbody></tbody>");
-                            jQuery.each(name, function(i,data) {
-                                mbid=data["mbid"];
+            if ((searchword.length) >= 3) {
+                if (ajaxReq === null) {
+                    ajaxReq = $.ajax({
+                        url: searchurl,
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            $("#searchtable").show();
+                            if (searchtype == "1") {
+                                var name = response['results']['trackmatches']['track'];
+                                var count = 0;
+                                $("#searchtable").html("<thead> <tr> <th scope=\"col\">#</th> <th scope=\"col\">Name</th> <th scope=\"col\">Artist</th></tr><tbody></tbody>");
+                                jQuery.each(name, function (i, data) {
+                                    mbid = data["mbid"];
 
-                                if(mbid.length > 10 && count<5){
-                                    count++;
-                                    var image=data["image"];
-                                    var artist = data["artist"];
-                                    var imageurl=data["image"][0]["#text"];
-                                    var song = '<tr><td><img src=\"'+imageurl+'\"> </td><td><a href=\"\\song\\' + mbid + '\">' + data['name'] + '</a></td><td>'+artist+'</td></tr>';
-                                    $("#searchtable > tbody").append(song);
-                                }
-                            });
+                                    if (mbid.length > 10 && count < 5) {
+                                        count++;
+                                        var image = data["image"];
+                                        var artist = data["artist"];
+                                        var imageurl = data["image"][0]["#text"];
+                                        var song = '<tr><td><img src=\"' + imageurl + '\"> </td><td><a href=\"\\song\\' + mbid + '\">' + data['name'] + '</a></td><td>' + artist + '</td></tr>';
+                                        $("#searchtable > tbody").append(song);
+                                    }
+                                });
+                            }
+                            else {
+                                var name = response['results']['artistmatches']['artist'];
+                                var count = 0;
+                                $("#searchtable").html("<thead> <tr> <th scope=\"col\">#</th> <th scope=\"col\">Artist Name</th></tr><tbody></tbody>");
+                                jQuery.each(name, function (i, data) {
+                                    mbid = data["mbid"];
+                                    if (mbid.length > 10 && count < 5) {
+                                        count++;
+                                        var image = data["image"];
+                                        var artist = data["name"];
+                                        var imageurl = data["image"][0]["#text"];
+                                        var song = '<tr><td><img src=\"' + imageurl + '\"> </td><td><a href=\"\\artist\\' + mbid + '\">' + artist + '</a></td></tr>';
+                                        $("#searchtable > tbody").append(song);
+                                    }
+                                });
+                            }
+
+
+                            ajaxReq = null;
                         }
-                        else {
-                            var name = response['results']['artistmatches']['artist'];
-                            var count = 0;
-                            $("#searchtable").html("<thead> <tr> <th scope=\"col\">#</th> <th scope=\"col\">Artist Name</th></tr><tbody></tbody>");
-                            jQuery.each(name, function(i,data) {
-                                mbid=data["mbid"];
-                                if(mbid.length > 10 && count<5){
-                                    count++;
-                                    var image=data["image"];
-                                    var artist = data["name"];
-                                    var imageurl=data["image"][0]["#text"];
-                                    var song = '<tr><td><img src=\"'+imageurl+'\"> </td><td><a href=\"\\artist\\' + mbid + '\">' + artist + '</a></td></tr>';
-                                    $("#searchtable > tbody").append(song);
-                                }
-                            });
-                        }
 
-
-                        ajaxReq = null;
-                    }
-
-                });
-                ajaxReq = null;
+                    });
+                    ajaxReq = null;
+                }
             }
         }
-    }
-    $(".search-input").keyup(searchFunction).change(searchFunction);
-    $("#searchtype").change(searchFunction);
-});
+        $(".search-input").keyup(searchFunction).change(searchFunction);
+        $("#searchtype").change(searchFunction);
+    });
 
-$(document).mouseup(function(e)
-{
-    var container = $("#searchtable");
+    $(document).mouseup(function (e) {
+        var container = $("#searchtable");
 
-    // if the target of the click isn't the container nor a descendant of the container
-    if (!container.is(e.target) && container.has(e.target).length === 0)
-    {
-        container.hide();
-    }
-});
+        // if the target of the click isn't the container nor a descendant of the container
+        if (!container.is(e.target) && container.has(e.target).length === 0) {
+            container.hide();
+        }
+    });
 </script>
 </body>
 </html>

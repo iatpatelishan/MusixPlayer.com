@@ -112,13 +112,14 @@ public class Song {
         this.imageUrl = imageUrl;
     }
 
-    public Song(String mbId, String name, String description, Integer duration, String lastfmUrl, String imageUrl, Collection<ArtistData> artists) {
+    public Song(String mbId, String name, String description, Integer duration, String lastfmUrl, String imageUrl, String youtubeUrl, Collection<ArtistData> artists) {
         this.mbId = mbId;
         this.name = name;
         this.description = description;
         this.duration = duration;
         this.lastfmUrl = lastfmUrl;
         this.imageUrl = imageUrl;
+        this.youtubeUrl = youtubeUrl;
         this.artists = artists;
     }
 }

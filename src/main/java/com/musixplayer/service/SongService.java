@@ -82,10 +82,12 @@ public class SongService {
             if (jsonsong.has("wiki") && jsonsong.get("wiki").has("summary")) {
                 description = jsonsong.get("wiki").get("summary").textValue();
             }
+            String youtubeUrl = proxyService.searchSongYoutubeURL(artistData.getName()+" "+songname);
 
             Collection<ArtistData> artists = new ArrayList<ArtistData>();
             artists.add(artistData);
-            song = new Song(mbid, songname, description, duration, lastFmUrl, imageUrl, artists);
+
+            song = new Song(mbid, songname, description, duration, lastFmUrl, imageUrl, youtubeUrl, artists);
             song = create(song);
 
             Collection<Song> songs = artistData.getSongs();

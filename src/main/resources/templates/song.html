@@ -2,6 +2,22 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <div th:replace="fragments/header :: header-css"/>
+    <link rel='stylesheet prefetch' href='https://cdn.plyr.io/2.0.7/plyr.css'>
+    <style>
+        .plyr {
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .col-centered {
+            float: none;
+            margin: 0 auto;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,50 +34,130 @@
                 <div class="card">
                     <div class="card-body">
                         <img th:src="${songImageUrl}"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <b>Duration</b> <span th:text="${songMinuteDuration}+':'+ ${songSecondsDuration}"></span>
-                    </div>
-                    <div class="col-6 text-right">
-                        <b> Views </b> <span th:text="${songViews}"></span>
-                    </div>
-                </div>
-                <br>
-                <div class="col-6" th:if="${songYouTubeLink} != null">
-                    <button type="button" class="btn btn-primary" Play
-                    </button>
-                </div>
+                        <div class="row mx-auto">
+                            <div class="col-12 mx-auto" th:if="${songYoutubeLink} != null">
+                                <div class="hide">
+                                    <div data-type="youtube" th:data-video-id="${songYoutubeLink}"></div>
+                                </div>
+                                <div class="actions" style="margin-top: 10px">
+                                    <div style="margin: 0 auto;max-width: 205px;">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-outline-primary js-play">
+                                                <input type="radio" name="options" id="option2" autocomplete="off"> Play
+                                            </label>
+                                            <label class="btn btn-outline-primary js-pause">
+                                                <input type="radio" name="options" id="option3" autocomplete="off">
+                                                Pause
+                                            </label>
+                                            <label class="btn btn-outline-primary active js-stop">
+                                                <input type="radio" name="options" id="option1" autocomplete="off"
+                                                       checked> Stop
+                                            </label>
+                                        </div>
+                                    </div>
 
+                                    <div style="margin: 0 auto;max-width: 115px;">
+                                        <div class="btn-group" role="group" aria-label="Player Control">
+                                            <button type="button" class="btn btn-outline-info btn-sm js-rewind">Rewind
+                                            </button>
+                                            <button type="button" class="btn btn-outline-info btn-sm js-forward">Forward
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div class="col-8">
                 <h4>Description</h4>
                 <p><span th:utext="${songDescription}"></span></p>
                 <br>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item"><h3>Artist</h3></li>
-                    <div class="card" th:each="artistData : ${listOfArtists}" th:if="listOfArtists != null">
-                        <li class="list-group-item "><a th:href="'/artist/' + ${artistData.getMbid()}"><span th:text="${artistData.getName()}"></span></a></li>
-                    </div>
-                </ul>
+                <b> Artist:
+                    <span th:each="artistData : ${listOfArtists}" th:if="listOfArtists != null">
+                        <a th:href="'/artist/' + ${artistData.getMbid()}">
+                            <span th:text="${artistData.getName()}"></span></a>
+                    </span>
+                </b>
+                <br/>
+
+                <b>Duration: <span th:text="${songMinuteDuration}+' minutes '+ ${songSecondsDuration}+ ' seconds'"></span></b>
+                <br/>
+
+                <b>Views: <span th:text="${songViews}"></span></b>
+                <br/>
             </div>
-
-            <div class="container">
-                <div class="row">
-                    <div class="col-5">
-
-                        <br>
-                        <h3>Reviews</h3>
-                    </div>
-                </div>
-            </div>
-
-
         </div>
     </div>
-    <!-- /.container -->
-    <div th:replace="fragments/footer :: footer"/>
 
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+
+                <br>
+                <h3>Reviews</h3>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+<script src='https://cdn.plyr.io/2.0.7/plyr.js'></script>
+<script>
+    (function () {
+        // This is the bare minimum JavaScript. You can opt to pass no arguments to setup.
+        // e.g. just plyr.setup(); and leave it at that if you have no need for events
+        var instances = plyr.setup({
+            // Output to console
+            debug: true
+        });
+
+        // Get an element
+        function get(selector) {
+            return document.querySelector(selector);
+        }
+
+        // Custom event handler (just for demo)
+        function on(element, type, callback) {
+            if (!(element instanceof HTMLElement)) {
+                element = get(element);
+            }
+            element.addEventListener(type, callback, false);
+        }
+
+        // Loop through each instance
+        instances.forEach(function (instance) {
+            // Play
+            on('.js-play', 'click', function () {
+                instance.play();
+            });
+
+            // Pause
+            on('.js-pause', 'click', function () {
+                instance.pause();
+            });
+
+            // Stop
+            on('.js-stop', 'click', function () {
+                instance.stop();
+            });
+
+            // Rewind
+            on('.js-rewind', 'click', function () {
+                instance.rewind();
+            });
+
+            // Forward
+            on('.js-forward', 'click', function () {
+                instance.forward();
+            });
+        });
+    })();
+</script>
 </body>
 </html>
