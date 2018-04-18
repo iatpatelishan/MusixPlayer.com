@@ -38,19 +38,33 @@ public class SongController {
         else views = song.getViews();
         song = songService.updateSongViews(views + 1, song.getId());
 
+        // for song duration
+        int seconds,minutes;
+        if(song.getDuration()== null) {
+            seconds = 0;
+            minutes = 0;
+        } else {
+            minutes = (song.getDuration())/(1000 * 60);
+            seconds = (song.getDuration()/ 1000) % 60;
+        }
 
         modelAndView.addObject("songMbid", mbId);
         modelAndView.addObject("songName", song.getName());
         modelAndView.addObject("songLastfmUrl", song.getLastfmUrl());
         modelAndView.addObject("listOfArtists", song.getArtists());
         modelAndView.addObject("songViews", song.getViews());
-        modelAndView.addObject("songYoutubeLink", "just checking");
+        modelAndView.addObject("songCreated", song.getCreated());
+        modelAndView.addObject("songMinuteDuration", minutes);
+        modelAndView.addObject("songSecondsDuration", seconds);
 
 
         if(song.getImageUrl() == null){
             modelAndView.addObject("songImageUrl", "http://www.liquidmoon.co.uk/wp-content/uploads/2014/08/musix-logo-1000x700.jpg");
         }else{
             modelAndView.addObject("songImageUrl", song.getImageUrl());
+        }
+        if(song.getYoutubeUrl() != null){
+            modelAndView.addObject("songYoutubeLink", song.getYoutubeUrl());
         }
         if (song.getDescription() == null) {
             modelAndView.addObject("songDescription", "No description found for this song");

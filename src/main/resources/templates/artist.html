@@ -11,38 +11,25 @@
 
     <div class="container">
 
-        <h1><span th:text="${songName}"></span></h1>
+        <h1><span th:text="${artistName}"></span></h1>
         <br/>
         <div class="row">
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <img th:src="${songImageUrl}"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
-                        <b>Duration</b> <span th:text="${songMinuteDuration}+':'+ ${songSecondsDuration}"></span>
-                    </div>
-                    <div class="col-6 text-right">
-                        <b> Views </b> <span th:text="${songViews}"></span>
+                        <img th:src="${artistImageUrl}"/>
                     </div>
                 </div>
                 <br>
-                <div class="col-6" th:if="${songYouTubeLink} != null">
-                    <button type="button" class="btn btn-primary" Play
-                    </button>
-                </div>
-
             </div>
             <div class="col-8">
                 <h4>Description</h4>
-                <p><span th:utext="${songDescription}"></span></p>
+                <p><span th:utext="${artistDescription}"></span></p>
                 <br>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><h3>Artist</h3></li>
-                    <div class="card" th:each="artistData : ${listOfArtists}" th:if="listOfArtists != null">
-                        <li class="list-group-item "><a th:href="'/artist/' + ${artistData.getMbid()}"><span th:text="${artistData.getName()}"></span></a></li>
+                    <div class="card" th:each="song : ${listOfSongs}" th:if="listOfSongs != null">
+                        <li class="list-group-item "><a th:href="'/song/' + ${song.getMbid()}"><span th:text="${song.getName()}"></span></a></li>
                     </div>
                 </ul>
             </div>
