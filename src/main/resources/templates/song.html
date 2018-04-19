@@ -72,8 +72,7 @@
             </div>
 
             <div class="col-8">
-                <h4>Description</h4>
-                <p><span th:utext="${songDescription}"></span></p>
+                <h4>Details</h4>
                 <br>
                 <b> Artist:
                     <span th:each="artistData : ${listOfArtists}" th:if="listOfArtists != null">
@@ -88,18 +87,35 @@
 
                 <b>Views: <span th:text="${songViews}"></span></b>
                 <br/>
+
+                <b>Description:</b> <span th:utext="${songDescription}"></span>
+                <br/>
+
+                <div th:if="songLyrics != null">
+                    <br>
+
+                    <h4>Lyrics</h4>
+                    <span th:each="lyrics : ${songLyrics}" th:if="songLyrics != null">
+                            <p data-th-utext="${#strings.replace(lyrics.getLyrics(), newLineChar, '&lt;br /&gt;')}"></p>
+
+                        <b> Lyrics Courtesy: <span th:text="${lyrics.getSource()}"></span> </b>
+                    </span>
+                    <br/>
+                </div>
+
             </div>
         </div>
     </div>
 
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <br>
-                <h3>Reviews</h3>
+        <div class="container">
+            <div class="row">
+                <div class="col-6">
+                    <h4>Reviews</h4>
+                </div>
+
             </div>
         </div>
-    </div>
+
 </div>
 <!-- /.container -->
 <div th:replace="fragments/footer :: footer"/>

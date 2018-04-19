@@ -26,10 +26,15 @@ public class Person {
     @Setter
     private Long id;
 
-    @Column(name = "email")
+    @Column(name = "email", unique=true)
     @Getter
     @Setter
     private String email;
+
+    @Column(name = "emailhash", unique=true)
+    @Getter
+    @Setter
+    private String emailHash;
 
     @Column(name = "password")
     @JsonIgnore
@@ -37,7 +42,7 @@ public class Person {
     @Setter
     private String password;
 
-    @Column(name = "username")
+    @Column(name = "username", unique=true)
     @Getter
     @Setter
     private String username;

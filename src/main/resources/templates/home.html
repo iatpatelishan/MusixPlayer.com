@@ -205,7 +205,7 @@
                             <!--end of col-->
                             <div class="col">
                                 <input class="form-control form-control-lg form-control-borderless search-input"
-                                       type="search" placeholder="Search for Songs and Artists" id="searchinput">
+                                       type="search" placeholder="Search for Songs and Artists" id="searchinput" autofocus>
                             </div>
                             <!--end of col-->
                             <div class="col-auto" style="margin-right: 10px;">
@@ -253,9 +253,7 @@
                                                                 alt="Card image cap"></a>
                 <div class="card-body">
                     <h5 class="card-title" th:text="${song.getName()}"></h5>
-                    <p class="card-text">
-                        <small class="text-muted">Last updated 3 mins ago</small>
-                    </p>
+
                 </div>
             </div>
         </div>

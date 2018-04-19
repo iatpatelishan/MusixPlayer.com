@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
 import java.util.UUID;
+import java.security.*;
+import java.math.*;
 
 @Controller
 public class RegisterController {
@@ -71,6 +73,15 @@ public class RegisterController {
         }
 
         String email = (String) requestParams.get("email");
+        String emailHash;
+        try {
+            MessageDigest m=MessageDigest.getInstance("MD5");
+            m.update(email.getBytes(),0,email.length());
+            emailHash = new BigInteger(1,m.digest()).toString(16);
+        } catch (NoSuchAlgorithmException e) {
+            emailHash="";
+        }
+
         String firstName = (String) requestParams.get("firstName");
         String lastName = (String) requestParams.get("lastName");
         String usertype = (String) requestParams.get("usertype");
@@ -90,6 +101,7 @@ public class RegisterController {
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setEmail(email);
+            user.setEmailHash(emailHash);
             user.setConfirmationToken(confirmationToken);
             user.setEnabled(false);
             user.setRole(roleService.findByRoleName("USER"));
@@ -99,6 +111,7 @@ public class RegisterController {
             artist.setFirstName(firstName);
             artist.setLastName(lastName);
             artist.setEmail(email);
+            artist.setEmailHash(emailHash);
             artist.setConfirmationToken(confirmationToken);
             artist.setEnabled(false);
             String mbid = (String) requestParams.get("mbid");
@@ -117,6 +130,7 @@ public class RegisterController {
             editor.setFirstName(firstName);
             editor.setLastName(lastName);
             editor.setEmail(email);
+            editor.setEmailHash(emailHash);
             editor.setConfirmationToken(confirmationToken);
             editor.setEnabled(false);
             editor.setRole(roleService.findByRoleName("EDITOR"));
@@ -126,6 +140,7 @@ public class RegisterController {
             admin.setFirstName(firstName);
             admin.setLastName(lastName);
             admin.setEmail(email);
+            admin.setEmailHash(emailHash);
             admin.setConfirmationToken(confirmationToken);
             admin.setEnabled(false);
             admin.setRole(roleService.findByRoleName("ADMIN"));

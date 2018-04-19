@@ -18,7 +18,7 @@ public class Song {
     @Setter
     private Long id;
 
-    @Column(name = "song_mbId")
+    @Column(name = "song_mbId", unique=true)
     @Getter
     @Setter
     private String mbId;

@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div class="mycontainer">
+
+    <div th:replace="fragments/header :: header"/>
+
+    <div class="container">
+
+
+        <br/>
+        <div class="row">
+            <div class="col-8">
+                <h1><span th:text="${profile.getFirstName()}+' '+${profile.getLastName()}"></span></h1>
+            </div>
+            <div class="col-4">
+                <img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${profile.getEmailHash()}+'?s=128'" style="border-radius: 50%">
+            </div>
+
+        </div>
+    </div>
+
+    <span th:utext="${profile.getEmail()}"></span>
+
+</div>
+    <!-- /.container -->
+    <div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

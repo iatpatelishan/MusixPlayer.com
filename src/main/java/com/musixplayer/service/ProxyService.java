@@ -2,13 +2,20 @@ package com.musixplayer.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.musixplayer.config.XUserAgentInterceptor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 @Service
@@ -57,6 +64,31 @@ public class ProxyService {
             }
         }
         return null;
+    }
+
+    @Cacheable("apiSeedsLyrics")
+    public String searchLyricsInApiSeeds(String song, String artist) {
+        String result=null;
+        if (song != null && artist!=null) {
+            String uri = "https://orion.apiseeds.com/api/music/lyric/"+artist.replaceAll("[^A-Za-z0-9 ]", "")+"/"+song.replaceAll("[^A-Za-z0-9 ]", "")+"?apikey=IbBAffPwx6dAOUHht2ktKhunfB29V6ZLc16v0izDTcmdJ7M5mtX2MRlwsoYyE8Va";
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set( "User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+            HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+            try {
+                result = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class).getBody();
+                return result;
+            } catch (HttpClientErrorException ex){
+                if (ex.getStatusCode() != HttpStatus.NOT_FOUND) {
+                    //throw ex;
+                }
+            }
+
+
+        }
+        return result;
     }
 
 

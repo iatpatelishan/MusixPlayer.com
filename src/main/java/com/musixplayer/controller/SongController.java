@@ -59,6 +59,10 @@ public class SongController {
         modelAndView.addObject("songMinuteDuration", minutes);
         modelAndView.addObject("songSecondsDuration", seconds);
 
+        if(song.getYoutubeUrl() != null){
+            modelAndView.addObject("songLyrics", song.getLyrics());
+            modelAndView.addObject("newLineChar", '\n');
+        }
 
         if(song.getImageUrl() == null){
             modelAndView.addObject("songImageUrl", "http://www.liquidmoon.co.uk/wp-content/uploads/2014/08/musix-logo-1000x700.jpg");

@@ -19,7 +19,7 @@ public class Lyrics {
     @Setter
     private String source;
 
-    @Column(name = "lyrics")
+    @Column(name = "lyrics", length = 10000)
     @Getter
     @Setter
     private String lyrics;

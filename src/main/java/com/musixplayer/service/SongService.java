@@ -19,13 +19,15 @@ public class SongService {
 
     private final SongRepository songRepository;
     private final ArtistDataService artistDataService;
+    private final LyricsService lyricsService;
     private final ProxyService proxyService;
 
 
     @Autowired
-    public SongService(SongRepository songRepository, ArtistDataService artistDataService, ProxyService proxyService) {
+    public SongService(SongRepository songRepository, ArtistDataService artistDataService, LyricsService lyricsService, ProxyService proxyService) {
         this.songRepository = songRepository;
         this.artistDataService = artistDataService;
+        this.lyricsService = lyricsService;
         this.proxyService = proxyService;
     }
 
@@ -49,6 +51,9 @@ public class SongService {
     }
 
     public Song fetchSongandAdd(String mbid) {
+        if(mbid.length()<30){
+            return null;
+        }
         // if exists, then return existing
         Optional<Song> checksong = songRepository.findByMbId(mbid);
         if (checksong.isPresent()) {
@@ -99,6 +104,20 @@ public class SongService {
                 artistData.setSongs(songs);
                 artistData = artistDataService.create(artistData);
             }
+
+            Lyrics apiSeedsLyrics  = lyricsService.fetchApiSeedsLyricsAndAdd(song);
+            if(apiSeedsLyrics != null){
+                Collection<Lyrics> lyricslist = song.getLyrics();
+                if(lyricslist==null){
+                    lyricslist = new ArrayList<Lyrics>();
+                }
+                if (!lyricslist.contains(apiSeedsLyrics)) {
+                    lyricslist.add(apiSeedsLyrics);
+                    song.setLyrics(lyricslist);
+                    song = create(song);
+                }
+            }
+
             return song;
         } catch (IOException e) {
             e.printStackTrace();
