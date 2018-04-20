@@ -37,6 +37,10 @@
                      class="alert alert-danger" role="alert"
                      th:text="${alreadyRegisteredMessage}"></div>
 
+                <div th:if="${wrongmbidmessage}"
+                     class="alert alert-danger" role="alert"
+                     th:text="${wrongmbidmessage}"></div>
+
 
                 <div th:if="${#fields.hasErrors('firstName')}"
                      th:errors="*{firstName}"

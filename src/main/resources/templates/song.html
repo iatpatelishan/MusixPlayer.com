@@ -33,7 +33,7 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <img th:src="${songImageUrl}"/>
+                        <img th:src="${songImageUrl}" style="max-height: 100%; max-width: 100%"/>
                         <div class="row mx-auto">
                             <div class="col-12 mx-auto" th:if="${songYoutubeLink} != null">
                                 <div class="hide">
@@ -82,7 +82,8 @@
                 </b>
                 <br/>
 
-                <b>Duration: <span th:text="${songMinuteDuration}+' minutes '+ ${songSecondsDuration}+ ' seconds'"></span></b>
+                <b>Duration: <span
+                        th:text="${songMinuteDuration}+' minutes '+ ${songSecondsDuration}+ ' seconds'"></span></b>
                 <br/>
 
                 <b>Views: <span th:text="${songViews}"></span></b>
@@ -107,14 +108,56 @@
         </div>
     </div>
 
-        <div class="container">
-            <div class="row">
-                <div class="col-6">
-                    <h4>Reviews</h4>
+    <div class="container" style="margin-top: 100px">
+        <div class="row">
+            <div class="col-12" style="max-width: 700px;">
+
+                <h4>Reviews</h4>
+                <form action="/review/add" method="POST">
+                    <fieldset>
+                        <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                        <div class="form-group">
+                            <label for="exampleTextarea">Enter your Review</label>
+                            <textarea class="form-control" id="exampleTextarea" rows="3"
+                                      name="reviewtext"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </fieldset>
+                </form>
+
+                <br/><br/>
+                <div th:if="songReviews != null">
+                    <div class="card" th:each="review : ${songReviews}">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${review.getReviewer().getEmailHash()}+'?s=48&d=robohash'"
+                                                            style="border-radius: 50%">
+                                        <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
+                                            th:text="${review.getReviewer().getUsername()} + '  '"></h6>
+                                    </div>
+                                    <div class="col-8">
+                                        <p class="card-text" th:text="${review.getReview()}"></p>
+
+                                        <form action="/review/flag" method="POST">
+                                            <span class="alert alert-dismissible alert-warning" th:if="${review.getFlagged()}==true">This Review is Flagged!</span>
+                                            <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
+                                            <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                            <button type="submit" class="btn btn-danger btn-sm">Flag</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
+
 
             </div>
         </div>
+    </div>
 
 </div>
 <!-- /.container -->

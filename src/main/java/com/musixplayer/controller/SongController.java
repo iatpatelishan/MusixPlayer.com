@@ -65,7 +65,7 @@ public class SongController {
         }
 
         if(song.getImageUrl() == null){
-            modelAndView.addObject("songImageUrl", "http://www.liquidmoon.co.uk/wp-content/uploads/2014/08/musix-logo-1000x700.jpg");
+            modelAndView.addObject("songImageUrl", "https://i.imgur.com/fhQ16yL.jpg");
         }else{
             modelAndView.addObject("songImageUrl", song.getImageUrl());
         }
@@ -76,6 +76,10 @@ public class SongController {
             modelAndView.addObject("songDescription", "No description found for this song");
         }else{
             modelAndView.addObject("songDescription", song.getDescription());
+        }
+
+        if (song.getReviews() != null) {
+            modelAndView.addObject("songReviews", song.getReviews());
         }
 
         modelAndView.setViewName("song");

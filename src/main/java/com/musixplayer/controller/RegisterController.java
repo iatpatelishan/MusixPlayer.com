@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.security.*;
 import java.math.*;
@@ -72,6 +73,10 @@ public class RegisterController {
             return modelAndView;
         }
 
+
+
+        String usertype = (String) requestParams.get("usertype");
+
         String email = (String) requestParams.get("email");
         String emailHash;
         try {
@@ -81,10 +86,9 @@ public class RegisterController {
         } catch (NoSuchAlgorithmException e) {
             emailHash="";
         }
-
         String firstName = (String) requestParams.get("firstName");
         String lastName = (String) requestParams.get("lastName");
-        String usertype = (String) requestParams.get("usertype");
+
         String confirmationToken = UUID.randomUUID().toString();
 
         Person personExists = personService.findByEmail(email).orElse(null);
@@ -107,6 +111,14 @@ public class RegisterController {
             user.setRole(roleService.findByRoleName("USER"));
             userService.create(user);
         } else if (usertype.equals("artist")) {
+            String mbid = (String) requestParams.get("mbid");
+            ArtistData artistData = artistDataService.fetchArtistDataandAdd(mbid);
+            if (artistData==null) {
+                modelAndView.addObject("wrongmbidmessage", "Oops!  We cannot find this Mbid. More Info at https://musicbrainz.org/doc/MusicBrainz_Identifier");
+                modelAndView.setViewName("register");
+                bindingResult.reject("mbid");
+                return modelAndView;
+            }
             Artist artist = new Artist();
             artist.setFirstName(firstName);
             artist.setLastName(lastName);
@@ -114,14 +126,6 @@ public class RegisterController {
             artist.setEmailHash(emailHash);
             artist.setConfirmationToken(confirmationToken);
             artist.setEnabled(false);
-            String mbid = (String) requestParams.get("mbid");
-            ArtistData artistData = artistDataService.findByMbid(mbid).orElse(null);
-            if(artistData==null) {
-                mbid=UUID.randomUUID().toString().substring(0,32);
-                artistData = new ArtistData();
-                artistData.setMbid(mbid);
-                artistData= artistDataService.create(artistData);
-            }
             artist.setArtistData(artistData);
             artist.setRole(roleService.findByRoleName("ARTIST"));
             artistService.create(artist);

@@ -17,15 +17,68 @@
         <div class="row">
             <div class="col-8">
                 <h1><span th:text="${profile.getFirstName()}+' '+${profile.getLastName()}"></span></h1>
+                <button type="button" class="btn btn-outline-primary">Follow</button>
+                <div class="col-12 mx-auto" th:if="${profile.getRole().getName()} == 'ARTIST'">
+                    <button type="button" class="btn btn-outline-primary">Follow</button>
+                </div>
+
             </div>
             <div class="col-4">
-                <img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${profile.getEmailHash()}+'?s=128'" style="border-radius: 50%">
+                <img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${profile.getEmailHash()}+'?s=128&d=robohash'" style="border-radius: 50%">
             </div>
 
         </div>
     </div>
 
-    <span th:utext="${profile.getEmail()}"></span>
+    <div class="container" style="margin-top: 100px">
+        <div class="row">
+
+            <div class="col-4">
+                <h5>Following Users</h5>
+                <table class="table table-striped">
+
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>Larry</td>
+                        <td>the Bird</td>
+                        <td>@twitter</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="col-4">
+                <h5>Following Actors</h5>
+
+            </div>
+
+            <div class="col-4">
+                <h5>Followed By</h5>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-4">
+                <h5>Songs Reviewed</h5>
+            </div>
+        </div>
+    </div>
+
+
 
 </div>
     <!-- /.container -->

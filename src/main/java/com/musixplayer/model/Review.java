@@ -21,7 +21,7 @@ public class Review {
     @Setter
     private Integer rating;
 
-    @Column(name = "review")
+    @Column(name = "review", length = 10000)
     @Getter
     @Setter
     private String review;

@@ -27,7 +27,6 @@ public class ProfileController {
 
     @GetMapping("/{username}")
     public ModelAndView getProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username) throws NoSuchAlgorithmException {
-
         Person profile = personService.findByUsername(username).orElse(null);
         modelAndView.addObject("profile",profile);
 

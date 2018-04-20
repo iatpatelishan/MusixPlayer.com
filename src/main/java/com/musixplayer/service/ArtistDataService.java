@@ -46,6 +46,12 @@ public class ArtistDataService {
     }*/
 
     public ArtistData fetchArtistDataandAdd(String mbid) {
+        if(mbid==null){
+            return null;
+        }
+        if(mbid.length()!=36){
+            return null;
+        }
         // if exists, then return existing
         Optional<ArtistData> checkartistdata = findByMbid(mbid);
         if (checkartistdata.isPresent()) {
@@ -56,7 +62,11 @@ public class ArtistDataService {
         ArtistData artistData = new ArtistData();
 
         try {
-            JsonNode jsonartist = new ObjectMapper().readTree(result).get("artist");
+            JsonNode jsonartist = new ObjectMapper().readTree(result);
+            if(jsonartist.has("error")){
+                return null;
+            }
+            jsonartist =  jsonartist.get("artist");
             String name = jsonartist.get("name").textValue();
             String url = jsonartist.get("url").textValue();
             String imageUrl = null;

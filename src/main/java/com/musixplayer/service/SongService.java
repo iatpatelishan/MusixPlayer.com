@@ -51,7 +51,7 @@ public class SongService {
     }
 
     public Song fetchSongandAdd(String mbid) {
-        if(mbid.length()<30){
+        if(mbid.length()!=36){
             return null;
         }
         // if exists, then return existing
@@ -63,7 +63,11 @@ public class SongService {
         String result = (String) proxyService.searchSongInLastfmByMbId(mbid);
         Song song = new Song();
         try {
-            JsonNode jsonsong = new ObjectMapper().readTree(result).get("track");
+            JsonNode jsonsong = new ObjectMapper().readTree(result);
+            if(jsonsong.has("error")){
+                return null;
+            }
+            jsonsong=jsonsong.get("track");
 
             String artistmbId = jsonsong.get("artist").get("mbid").textValue();
             if(artistmbId.length()<20){
@@ -77,12 +81,18 @@ public class SongService {
             String songname = jsonsong.get("name").textValue();
             Integer duration = Integer.parseInt(jsonsong.get("duration").textValue());
             String lastFmUrl = jsonsong.get("url").textValue();
-            Iterator<JsonNode> images = jsonsong.get("album").get("image").elements();
-            String imageUrl = null;
-            while (images.hasNext()) {
-                JsonNode imagenode = images.next();
-                imageUrl = imagenode.get("#text").textValue();
+            String imageUrl = "https://i.imgur.com/CM5NHYx.jpg";
+            if(jsonsong.has("album") && jsonsong.get("album").has("image")){
+                Iterator<JsonNode> images = jsonsong.get("album").get("image").elements();
+                while (images.hasNext()) {
+                    JsonNode imagenode = images.next();
+                    imageUrl = imagenode.get("#text").textValue();
+                }
             }
+            if(imageUrl.length()<5){
+               imageUrl = "https://i.imgur.com/CM5NHYx.jpg";
+            }
+
             String description = "";
             if (jsonsong.has("wiki") && jsonsong.get("wiki").has("summary")) {
                 description = jsonsong.get("wiki").get("summary").textValue();
