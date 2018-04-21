@@ -108,6 +108,13 @@
                                                    th:if="${artistReview.getFlagged()}==true">This Review is Flagged!</p>
                                                 <div class="row" sec:authorize="isAuthenticated()"
                                                      th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+
+                                                    <form action="/artistreview/delete" method="POST">
+                                                        <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                        <input type="hidden" th:value="${artistMbid}" name="mbid"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                    </form>
+
                                                     <form action="/artistreview/edit" method="POST" class="editform">
                                                 <textarea class="form-control" rows="3" name="reviewtext"
                                                           th:text="${artistReview.getReview()}"></textarea>
