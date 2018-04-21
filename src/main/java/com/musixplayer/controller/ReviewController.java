@@ -51,6 +51,8 @@ public class ReviewController {
         String songMbid = (String) requestParams.get("mbid");
         String requestURI = "/song/"+songMbid;
         String reviewtext = (String) requestParams.get("reviewtext");
+        Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
+
         Song song = songService.findSongByMbid(songMbid).orElse(null);
         if(song==null){
             modelAndView.setViewName("redirect:"+requestURI+"?wrongmbid");
@@ -64,6 +66,7 @@ public class ReviewController {
         if(reviewer.getReviews() != null ){
             for(Review r : reviewer.getReviews()){
                 if(r.getSong().getMbId().equals(songMbid)){
+                    r.setRating(ratings);
                     r.setReview(reviewtext);
                     r.setFlagged(false);
                     reviewService.create(r);
@@ -74,11 +77,45 @@ public class ReviewController {
         }
 
         Review review = new Review();
+        review.setRating(ratings);
         review.setReview(reviewtext);
         review.setReviewer(reviewer);
         review.setFlagged(false);
         review.setSong(song);
         reviewService.create(review);
+
+        modelAndView.setViewName("redirect:"+requestURI);
+        return modelAndView;
+    }
+
+    @PostMapping("/edit")
+    public ModelAndView editReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session){
+        String songMbid = (String) requestParams.get("mbid");
+        String requestURI = "/song/"+songMbid;
+        String reviewtext = (String) requestParams.get("reviewtext");
+        Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
+
+        Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
+
+        Person reviewer = personService.findByUsername(principal.getName()).orElse(null);
+        if(reviewer==null){
+            modelAndView.setViewName("redirect:"+requestURI+"?wrongreviewer");
+        }
+
+
+        Review review = reviewService.findReviewById(reviewId).orElse(null);
+        if(review != null){
+            if(review.getReviewer().getUsername()==principal.getName() || reviewer.getRole().getName().equals("EDITOR") || reviewer.getRole().getName().equals("ADMIN")){
+                review.setRating(ratings);
+                review.setReview(reviewtext);
+                review.setFlagged(true);
+                reviewService.create(review);
+            }
+            else{
+                modelAndView.setViewName("redirect:"+requestURI+"?NotAuthorized");
+            }
+
+        }
 
         modelAndView.setViewName("redirect:"+requestURI);
         return modelAndView;

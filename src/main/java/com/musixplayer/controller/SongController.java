@@ -1,15 +1,22 @@
 package com.musixplayer.controller;
 
 import com.musixplayer.model.ArtistData;
+import com.musixplayer.model.Person;
 import com.musixplayer.model.Song;
+import com.musixplayer.service.PersonService;
 import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.swing.plaf.synth.SynthColorChooserUI;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -18,14 +25,24 @@ import java.util.Optional;
 public class SongController {
 
     private SongService songService;
+    private PersonService personService;
 
     @Autowired
-    public SongController(SongService songService) {
+    public SongController(SongService songService, PersonService personService) {
         this.songService = songService;
+        this.personService = personService;
     }
 
     @GetMapping("/{mbid}")
-    public ModelAndView getSong(ModelAndView modelAndView, @PathVariable("mbid") String mbId) {
+    public ModelAndView getSong(ModelAndView modelAndView, @PathVariable("mbid") String mbId, Principal principal) {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Optional<Person> mxuser= personService.findByUsername(principal.getName());
+            if(mxuser.isPresent()){
+                modelAndView.addObject("mxuser", mxuser.get());
+            }
+        }
 
         Song song = songService.findSongByMbid(mbId).orElse(songService.fetchSongandAdd(mbId));
         if (song == null) {

@@ -41,7 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     "/about",
                     "/profile/**",
                     "/song/**",
-                    "/artist/**")
+                    "/artist/**","/review/flag","/css/**","/js/**","/img/**")
                 .permitAll()
                 .antMatchers("/admin/**").hasAnyRole("ADMIN")
                 .antMatchers("/person/**").hasAnyRole("USER")
