@@ -15,10 +15,4 @@ public class Artist extends Person {
     @JsonIgnore
     @JoinColumn(name = "artistdata_id", referencedColumnName = "artistData_id", unique=true)
     @Getter @Setter ArtistData artistData;
-
-    @OneToMany(mappedBy="artist")
-    @JsonIgnore
-    @Getter
-    @Setter
-    Collection<ArtistReview> artistReviews;
 }

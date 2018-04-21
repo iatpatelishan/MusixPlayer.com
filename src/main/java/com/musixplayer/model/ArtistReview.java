@@ -40,11 +40,11 @@ public class ArtistReview {
     @JsonIgnore
     @Getter
     @Setter
-    Artist artist;
+    ArtistData artist;
 
     @ManyToOne
     @JsonIgnore
     @Getter
     @Setter
-    User user;
+    Person artistReviewer;
 }

@@ -67,4 +67,10 @@ public class ArtistData {
     @Getter
     @Setter
     private Collection<Song> songs;
+
+    @OneToMany(mappedBy="artist")
+    @JsonIgnore
+    @Getter
+    @Setter
+    Collection<ArtistReview> artistReviews;
 }

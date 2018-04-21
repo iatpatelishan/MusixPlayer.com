@@ -1,7 +1,25 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <div th:replace="fragments/header :: header-css"/>
+    <link rel='stylesheet prefetch' href='https://cdn.plyr.io/2.0.7/plyr.css'>
+    <style>
+        .plyr {
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .col-centered {
+            float: none;
+            margin: 0 auto;
+        }
+    </style>
+    <script src="/js/jquery.combostars.js"></script>
+
 </head>
 <body>
 
@@ -17,7 +35,7 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        <img th:src="${artistImageUrl}"/>
+                        <img th:src="${artistImageUrl}" style="max-height: 100%; max-width: 100%"/>
                     </div>
                 </div>
                 <br>
@@ -36,10 +54,87 @@
 
             <div class="container">
                 <div class="row">
-                    <div class="col-5">
+                    <div class="col-12" style="max-width: 700px;">
 
                         <br>
-                        <h3>Reviews</h3>
+                        <h4>Artist Reviews</h4>
+                        <form action="/artistreview/add" method="POST">
+                            <fieldset>
+                                <input type="hidden" th:value="${artistMbid}" name="mbid"/>
+                                <div class="form-group">
+                                    <label for="exampleTextarea">Enter your Review: </label>
+                                    <textarea class="form-control" id="exampleTextarea" rows="3"
+                                              name="reviewtext"></textarea>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label" style="min-width: 100px;">Ratings:</label>
+                                    <div style="margin-top: 10px">
+                                        <select class="combostar" name="ratings">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </fieldset>
+                        </form>
+                        <br><br>
+                        <div th:if="artistReviews != null">
+                            <div class="card" th:each="artistReview : ${artistReviews}">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <img title="profile image" class="img-circle img-responsive"
+                                                     th:src="'https://www.gravatar.com/avatar/'+${artistReview.getArtistReviewer().getEmailHash()}+'?s=48&d=robohash'"
+                                                     style="border-radius: 50%">
+                                                <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
+                                                    th:text="${artistReview.getArtistReviewer().getUsername()} + '  '"></h6>
+                                                <form action="/artistreview/flag" method="POST">
+                                                    <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                    <input type="hidden" th:value="${artistMbid}" name="mbid"/>
+                                                    <button type="submit" class="btn btn-danger btn-sm">Flag</button>
+                                                </form>
+                                            </div>
+                                            <div class="col-8">
+                                                <p class="card-text reviewprintedtext" th:text="${artistReview.getReview()}"></p>
+                                                <p class="card-text reviewprintedtext" th:text="'Rating: '+${artistReview.getRating()}"></p>
+                                                <p class="alert alert-dismissible alert-warning"
+                                                   th:if="${artistReview.getFlagged()}==true">This Review is Flagged!</p>
+                                                <div class="row" sec:authorize="isAuthenticated()"
+                                                     th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                                    <form action="/artistreview/edit" method="POST" class="editform">
+                                                <textarea class="form-control" rows="3" name="reviewtext"
+                                                          th:text="${artistReview.getReview()}"></textarea>
+                                                        <div class="form-group row">
+                                                            <div style="margin-left: 20px">
+                                                                <select class="combostar" name="ratings">
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3" selected>3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                        <input type="hidden" th:value="${artistMbid}" name="mbid"/>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Edit</button>
+                                                    </form>
+                                                    <button class="btn btn-danger btn-sm editbutton">Edit</button>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -48,6 +143,76 @@
 </div>
     <!-- /.container -->
     <div th:replace="fragments/footer :: footer"/>
+
+<script>
+    $(document).ready(function () {
+        $('.editform').toggle();
+        $('.editbutton').on('click', function () {
+            $(this).siblings('.editform').toggle();
+            $(this).toggle();
+            $(this).parent().siblings('.reviewprintedtext').toggle();
+        })
+    });
+
+</script>
+<script src='https://cdn.plyr.io/2.0.7/plyr.js'></script>
+<script>
+    (function () {
+        // This is the bare minimum JavaScript. You can opt to pass no arguments to setup.
+        // e.g. just plyr.setup(); and leave it at that if you have no need for events
+        var instances = plyr.setup({
+            // Output to console
+            debug: true
+        });
+
+        // Get an element
+        function get(selector) {
+            return document.querySelector(selector);
+        }
+
+        // Custom event handler (just for demo)
+        function on(element, type, callback) {
+            if (!(element instanceof HTMLElement)) {
+                element = get(element);
+            }
+            element.addEventListener(type, callback, false);
+        }
+
+        // Loop through each instance
+        instances.forEach(function (instance) {
+            // Play
+            on('.js-play', 'click', function () {
+                instance.play();
+            });
+
+            // Pause
+            on('.js-pause', 'click', function () {
+                instance.pause();
+            });
+
+            // Stop
+            on('.js-stop', 'click', function () {
+                instance.stop();
+            });
+
+            // Rewind
+            on('.js-rewind', 'click', function () {
+                instance.rewind();
+            });
+
+            // Forward
+            on('.js-forward', 'click', function () {
+                instance.forward();
+            });
+        });
+    })();
+</script>
+
+<script>
+    $(function () {
+        $('.combostar').combostars();
+    });
+</script>
 
 </body>
 </html>

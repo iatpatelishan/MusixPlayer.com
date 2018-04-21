@@ -1,46 +1,33 @@
 package com.musixplayer.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.musixplayer.model.Person;
-import com.musixplayer.model.Review;
-import com.musixplayer.model.Song;
+import com.musixplayer.model.*;
 import com.musixplayer.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.security.Principal;
-import java.util.*;
+import java.util.Map;
 
 
 @Controller
-@RequestMapping("/review")
-public class ReviewController {
+@RequestMapping("/artistreview")
+public class ArtistReviewController {
 
-    private SongService songService;
-    private ReviewService reviewService;
+    private ArtistDataService artistDataService;
+    private ArtistReviewService artistReviewService;
     private PersonService personService;
 
     @Autowired
-    public ReviewController(SongService songService, ReviewService reviewService, PersonService personService) {
-        this.songService = songService;
-        this.reviewService = reviewService;
+    public ArtistReviewController(ArtistDataService artistDataService, ArtistReviewService artistReviewService, PersonService personService) {
+        this.artistDataService = artistDataService;
+        this.artistReviewService = artistReviewService;
         this.personService = personService;
     }
 
@@ -48,13 +35,13 @@ public class ReviewController {
     public ModelAndView addReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session){
 
 
-        String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String artistMbid = (String) requestParams.get("mbid");
+        String requestURI = "/artist/"+artistMbid;
         String reviewtext = (String) requestParams.get("reviewtext");
         Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
 
-        Song song = songService.findSongByMbid(songMbid).orElse(null);
-        if(song==null){
+        ArtistData artist = artistDataService.findByMbid(artistMbid).orElse(null);
+        if(artist==null){
             modelAndView.setViewName("redirect:"+requestURI+"?wrongmbid");
         }
 
@@ -63,26 +50,26 @@ public class ReviewController {
             modelAndView.setViewName("redirect:"+requestURI+"?wrongreviewer");
         }
 
-        if(reviewer.getReviews() != null && (reviewer.getUsername().equals(principal.getName()))){
-            for(Review r : reviewer.getReviews()){
-                if(r.getSong().getMbId().equals(songMbid)){
+        if(reviewer.getArtistReviewed() != null&& (reviewer.getUsername().equals(principal.getName()))){
+            for(ArtistReview r : reviewer.getArtistReviewed()){
+                if(r.getArtist().getMbid().equals(artistMbid)){
                     r.setRating(ratings);
                     r.setReview(reviewtext);
                     r.setFlagged(false);
-                    reviewService.create(r);
+                    artistReviewService.create(r);
                     modelAndView.setViewName("redirect:"+requestURI);
                     return modelAndView;
                 }
             }
         }
 
-        Review review = new Review();
-        review.setRating(ratings);
-        review.setReview(reviewtext);
-        review.setReviewer(reviewer);
-        review.setFlagged(false);
-        review.setSong(song);
-        reviewService.create(review);
+        ArtistReview artistReview = new ArtistReview();
+        artistReview.setRating(ratings);
+        artistReview.setReview(reviewtext);
+        artistReview.setArtistReviewer(reviewer);
+        artistReview.setFlagged(false);
+        artistReview.setArtist(artist);
+        artistReviewService.create(artistReview);
 
         modelAndView.setViewName("redirect:"+requestURI);
         return modelAndView;
@@ -90,12 +77,12 @@ public class ReviewController {
 
     @PostMapping("/edit")
     public ModelAndView editReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session){
-        String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String artistMbid = (String) requestParams.get("mbid");
+        String requestURI = "/artist/"+artistMbid;
         String reviewtext = (String) requestParams.get("reviewtext");
         Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
 
-        Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
+        Long reviewId = Long.parseLong((String) requestParams.get("artistreviewid"));
 
         Person reviewer = personService.findByUsername(principal.getName()).orElse(null);
         if(reviewer==null){
@@ -103,14 +90,14 @@ public class ReviewController {
         }
 
 
-        Review review = reviewService.findReviewById(reviewId).orElse(null);
-        if(review != null){
+        ArtistReview artistReview = artistReviewService.findReviewById(reviewId).orElse(null);
+        if(artistReview != null){
             String currentUserRole = personService.findByUsername(principal.getName()).get().getRole().getName();
-            if(review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN")){
-                review.setRating(ratings);
-                review.setReview(reviewtext);
-                review.setFlagged(false);
-                reviewService.create(review);
+            if(artistReview.getArtistReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN")){
+                artistReview.setRating(ratings);
+                artistReview.setReview(reviewtext);
+                artistReview.setFlagged(false);
+                artistReviewService.create(artistReview);
             }
             else{
                 modelAndView.setViewName("redirect:"+requestURI+"?NotAuthorized");
@@ -124,15 +111,15 @@ public class ReviewController {
 
     @PostMapping("/flag")
     public ModelAndView flagReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams) {
-        String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String artistMbid = (String) requestParams.get("mbid");
+        String requestURI = "/artist/"+artistMbid;
 
-        Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
+        Long reviewId = Long.parseLong((String) requestParams.get("artistreviewid"));
 
-        Review review = reviewService.findReviewById(reviewId).orElse(null);
-        if(review != null){
-            review.setFlagged(true);
-            reviewService.create(review);
+        ArtistReview artistReview = artistReviewService.findReviewById(reviewId).orElse(null);
+        if(artistReview != null){
+            artistReview.setFlagged(true);
+            artistReviewService.create(artistReview);
         }
         modelAndView.setViewName("redirect:"+requestURI);
         return modelAndView;
@@ -140,17 +127,17 @@ public class ReviewController {
 
     @PostMapping("/delete")
     public ModelAndView deleteReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams,BindingResult bindingResult, Principal principal, HttpSession session) {
-        String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String artistMbid = (String) requestParams.get("mbid");
+        String requestURI = "/artist/"+artistMbid;
 
-        Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
+        Long reviewId = Long.parseLong((String) requestParams.get("artistreviewid"));
 
-        Review review = reviewService.findReviewById(reviewId).orElse(null);
+        ArtistReview artistReview = artistReviewService.findReviewById(reviewId).orElse(null);
 
         String currentUserRole = personService.findByUsername(principal.getName()).get().getRole().getName();
 
-        if(review != null && (review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN"))){
-            reviewService.deleteReview(review);
+        if(artistReview != null && (artistReview.getArtistReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN"))){
+            artistReviewService.deleteReview(artistReview);
         }
         modelAndView.setViewName("redirect:"+requestURI);
         return modelAndView;

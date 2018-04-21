@@ -115,7 +115,7 @@
         <div class="row">
             <div class="col-12" style="max-width: 700px;">
 
-                <h4>Reviews</h4>
+                <h4>Song Reviews</h4>
                 <form action="/review/add" method="POST">
                     <fieldset>
                         <input type="hidden" th:value="${songMbid}" name="mbid"/>
@@ -167,6 +167,13 @@
                                            th:if="${review.getFlagged()}==true">This Review is Flagged!</p>
                                         <div class="row" sec:authorize="isAuthenticated()"
                                              th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+
+                                            <form action="/review/delete" method="POST">
+                                                <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
+                                                <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+
                                             <form action="/review/edit" method="POST" class="editform">
                                                 <textarea class="form-control" rows="3" name="reviewtext"
                                                           th:text="${review.getReview()}"></textarea>

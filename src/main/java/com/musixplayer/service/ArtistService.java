@@ -38,4 +38,5 @@ public class ArtistService {
     public Artist create(Artist artist) {
         return artistRepository.save(artist);
     }
+
 }

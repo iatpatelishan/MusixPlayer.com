@@ -8,6 +8,6 @@ INSERT INTO person(dtype, person_id, email, emailhash, enabled, first_name, last
 
 INSERT INTO person(dtype, person_id, email, emailhash, enabled, first_name, last_name, password, username, role_id, artistdata_id) VALUES ('User', 2, 'alice@patelishan.com','1d2bdcf38c1a2e25d53f2c327e6a551f', 1, 'Alice', 'Wonderland','$2a$04$RrQ0Z6zKfP5xDxZw6Q0GZOKUcP8qH46JfSyc7WoLpZD6y00qQ5MT2', 'alice', 2, null);
 
-INSERT INTO person(dtype, person_id, email, emailhash, enabled, first_name, last_name, password, username, role_id, artistdata_id) VALUES ('Artist', 3, 'bob@patelishan.com', 'dd835b0869b405e997e7506b0da9e647', 1, 'Bob', 'Marley', '$2a$04$gPSTL.AQC4Rj84/xh/AapeoEo35BtjDrVEvCyr7CM6CHEaZpwZ6su', 'bob', 3, 1 );
+INSERT INTO person(dtype, person_id, email, emailhash, enabled, first_name, last_name, password, username, role_id, artistdata_id) VALUES ('Artist', 3, 'bob@patelishan.com', 'dd835b0869b405e997e7506b0da9e647', 1, 'Bob', 'Marley', '$2a$04$gPSTL.AQC4Rj84/xh/AapeoEo35BtjDrVEvCyr7CM6CHEaZpwZ6su', 'bob', 3, null );
 
 INSERT INTO person(dtype, person_id, email, emailhash, enabled, first_name, last_name, password, username, role_id, artistdata_id) VALUES ('Editor', 4, 'charlie@patelishan.com', '821b3b4bfe0c076af10a3db005346108', 1, 'Charlie', 'Puth', '$2a$04$BhDqc3Qcy0JZydPqxlLc2umZhIj0bERxCuRcQqDrFGF04A7uVOZ12', 'charlie', 4, null );

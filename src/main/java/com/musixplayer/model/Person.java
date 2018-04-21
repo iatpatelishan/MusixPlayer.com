@@ -109,6 +109,11 @@ public class Person {
     @Setter
     private Collection<Review> reviews;
 
+    @OneToMany(mappedBy="artistReviewer")
+    @Getter
+    @Setter
+    private Collection<ArtistReview> artistReviewed;
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "person_likes_review", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"), inverseJoinColumns = @JoinColumn(name = "review_id", referencedColumnName = "review_id"))
     @JsonIgnore
