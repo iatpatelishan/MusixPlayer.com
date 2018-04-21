@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -172,13 +173,19 @@ public class ProfileController {
     }
 
     @PostMapping("/{username}/delete")
-    public void deleteProfile(@PathVariable("username") String username, ModelAndView modelAndView, BindingResult bindingResult, Principal principal, HttpSession session) {
+    public ModelAndView deleteProfile(@PathVariable("username") String username, ModelAndView modelAndView, BindingResult bindingResult, Principal principal, HttpSession session, HttpServletRequest request) {
 
-        String requestURI = "/";
+        String requestURI="/";
         Person person = personService.findByUsername(principal.getName()).orElse(null);
         String currentUserRole = person.getRole().getName();
 
         if (username.equals(principal.getName())||currentUserRole.equals("ADMIN")){
+
+            if(username.equals(principal.getName())){
+
+                request.getSession().invalidate();
+            }
+
             personService.deletePerson(username);
             modelAndView.setViewName("redirect:"+requestURI);
         }
@@ -187,5 +194,7 @@ public class ProfileController {
         {
             modelAndView.setViewName("redirect:"+requestURI+"?wronguser");
         }
+
+        return modelAndView;
     }
 }
