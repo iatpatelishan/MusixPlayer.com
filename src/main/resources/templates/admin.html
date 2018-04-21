@@ -53,8 +53,14 @@
                     <td th:text="${person.getFirstName()}"></td>
                     <td th:text="${person.getLastName()}"></td>
                     <td th:text="${person.getRole().getName()}"></td>
-                    <td>Update</td>
-                    <td>Delete</td>
+                    <td>
+                        <a th:href="'/profile/'+${person.getUsername()}+'/update'" </a>
+                    </td>
+                    <td>
+                        <form th:action="'/profile/'+${person.getUsername()}+'delete'" method="POST">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                        </form>
+                    </td>
                 </tr>
                 </tbody>
             </table>

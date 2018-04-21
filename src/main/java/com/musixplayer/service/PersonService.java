@@ -37,4 +37,13 @@ public class PersonService {
     }
 
 
+    public void deletePerson(String username){
+
+        Person person = personRepository.findByUsername(username).orElse(null);
+
+        if(person != null){
+            personRepository.delete(person);
+        }
+    }
+
 }
