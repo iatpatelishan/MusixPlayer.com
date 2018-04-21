@@ -41,21 +41,18 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser!=null) {
-                if(mxuser.getFollowing()==null){
+            if (mxuser != null) {
+                if (mxuser.getFollowing() == null) {
                     mxuser.setFollowing(new ArrayList<>());
                 }
-                if(mxuser.getFollowing().contains(profile)){
+                if (mxuser.getFollowing().contains(profile)) {
                     modelAndView.addObject("alreadyfollowed", true);
-                }else{
+                } else {
                     modelAndView.addObject("alreadyfollowed", false);
                 }
                 modelAndView.addObject("mxuser", mxuser);
             }
         }
-
-
-
 
 
         modelAndView.setViewName("profile");
@@ -72,14 +69,13 @@ public class ProfileController {
         Person following = personService.findByUsername(followPerson).orElse(null);
 
 
-        if (follower != null && following!=null && !(follower.getUsername().equals(following.getUsername()))) {
-            if(follower.getFollowing()==null){
+        if (follower != null && following != null && !(follower.getUsername().equals(following.getUsername()))) {
+            if (follower.getFollowing() == null) {
                 follower.getFollowing().add(following);
             } else {
-                if(follower.getFollowing().contains(following)){
+                if (follower.getFollowing().contains(following)) {
                     follower.getFollowing().remove(following);
-                }
-                else{
+                } else {
                     follower.getFollowing().add(following);
                 }
             }
@@ -88,5 +84,10 @@ public class ProfileController {
 
         modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
+    }
+
+    @PostMapping("/{username}/delete")
+    public void deleteProfile(@PathVariable("username") String username) {
+        personService.deletePerson(username);
     }
 }
