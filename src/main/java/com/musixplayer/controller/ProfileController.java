@@ -54,13 +54,61 @@ public class ProfileController {
             }
         }
 
+        modelAndView.setViewName("profile");
+        return modelAndView;
+    }
 
+    @GetMapping("/{username}/edit")
+    public ModelAndView getEditProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal, RedirectAttributes redir) {
+        Person profile = personService.findByUsername(username).orElse(null);
+        modelAndView.addObject("profile", profile);
 
-
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser!=null) {
+                if(mxuser.getFollowing()==null){
+                    mxuser.setFollowing(new ArrayList<>());
+                }
+                if(mxuser.getFollowing().contains(profile)){
+                    modelAndView.addObject("alreadyfollowed", true);
+                }else{
+                    modelAndView.addObject("alreadyfollowed", false);
+                }
+                modelAndView.addObject("mxuser", mxuser);
+            }
+        }
 
         modelAndView.setViewName("profile");
         return modelAndView;
     }
+
+    @GetMapping("/{username}/createplaylist")
+    public ModelAndView getCreatePlaylist(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal) {
+        Person profile = personService.findByUsername(username).orElse(null);
+        modelAndView.addObject("profile", profile);
+
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser!=null) {
+                if(mxuser.getFollowing()==null){
+                    mxuser.setFollowing(new ArrayList<>());
+                }
+                if(mxuser.getFollowing().contains(profile)){
+                    modelAndView.addObject("alreadyfollowed", true);
+                }else{
+                    modelAndView.addObject("alreadyfollowed", false);
+                }
+                modelAndView.addObject("mxuser", mxuser);
+            }
+        }
+
+        modelAndView.setViewName("profile");
+        return modelAndView;
+    }
+
 
 
     @PostMapping("/followunfollow")
