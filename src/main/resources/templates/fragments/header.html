@@ -57,7 +57,7 @@
                             <div class="dropdown-menu" aria-labelledby="download">
                                 <div class="dropdown-item" >Hi <span sec:authentication="name"></div>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" th:href="@{'/profile/'+${#authentication.name}}" >Profile</a>
+                                <a class="dropdown-item" th:href="@{'/profile/'+${#authentication.name}+'/view'}" >Profile</a>
                                 <a class="dropdown-item" href="/logout">Logout</a>
                             </div>
                         </li>
