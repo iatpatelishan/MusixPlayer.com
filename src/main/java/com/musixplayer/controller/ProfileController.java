@@ -32,7 +32,7 @@ public class ProfileController {
         this.personService = personService;
     }
 
-    @GetMapping("/{username}/view")
+    @GetMapping("/{username}/")
     public ModelAndView getProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal) {
         Person profile = personService.findByUsername(username).orElse(null);
         modelAndView.addObject("profile", profile);
@@ -62,24 +62,18 @@ public class ProfileController {
     public ModelAndView getEditProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal, RedirectAttributes redir) {
         Person profile = personService.findByUsername(username).orElse(null);
         modelAndView.addObject("profile", profile);
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
             if (mxuser!=null) {
-                if(mxuser.getFollowing()==null){
-                    mxuser.setFollowing(new ArrayList<>());
-                }
-                if(mxuser.getFollowing().contains(profile)){
-                    modelAndView.addObject("alreadyfollowed", true);
-                }else{
-                    modelAndView.addObject("alreadyfollowed", false);
-                }
+
                 modelAndView.addObject("mxuser", mxuser);
+                modelAndView.setViewName("editprofile");
+                return modelAndView;
             }
         }
 
-        modelAndView.setViewName("profile");
+        modelAndView.setViewName("redirect: /");
         return modelAndView;
     }
 
@@ -114,7 +108,7 @@ public class ProfileController {
     @PostMapping("/followunfollow")
     public ModelAndView followProfile(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, Principal principal) {
         String followPerson = (String) requestParams.get("followperson");
-        String requestURI = "/profile/" + followPerson + "/view";
+        String requestURI = "/profile/" + followPerson + "/";
 
         Person follower = personService.findByUsername(principal.getName()).orElse(null);
         Person following = personService.findByUsername(followPerson).orElse(null);

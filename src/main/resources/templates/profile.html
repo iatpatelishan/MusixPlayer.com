@@ -60,12 +60,12 @@
                     </tr>
                     <tr th:each="followperson : ${profile.getFollowing()}">
                         <div th:if="${followperson.getRole().getName()} != 'ARTIST'">
-                            <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"><img
+                            <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/'"><img
                                     th:src="'https://www.gravatar.com/avatar/'+${followperson.getEmailHash()}+'?s=16&d=robohash'"></a>
                             </th>
-                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                    th:text="${followperson.getFirstName()}+' '+${followperson.getLastName()}"></a></td>
-                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                    th:text="${followperson.getUsername()}"></a></td>
                         </div>
                     </tr>
@@ -84,12 +84,12 @@
                     </tr>
                     <tr th:each="followperson : ${profile.getFollowing()}">
                         <div th:if="${followperson.getRole().getName()} == 'ARTIST'">
-                            <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"><img
+                            <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/'"><img
                                     th:src="'https://www.gravatar.com/avatar/'+${followperson.getEmailHash()}+'?s=16&d=robohash'"></a>
                             </th>
-                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                    th:text="${followperson.getFirstName()}+' '+${followperson.getLastName()}"></a></td>
-                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                            <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                    th:text="${followperson.getUsername()}"></a></td>
                         </div>
                     </tr>
@@ -110,12 +110,12 @@
                         <td>Username</td>
                     </tr>
                     <tr th:each="followperson : ${profile.getFollowedBy()}">
-                        <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"><img
+                        <th scope="row"><a th:href="'/profile/'+${followperson.getUsername()}+'/'"><img
                                 th:src="'https://www.gravatar.com/avatar/'+${followperson.getEmailHash()}+'?s=16&d=robohash'"></a>
                         </th>
-                        <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                        <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                th:text="${followperson.getFirstName()}+' '+${followperson.getLastName()}"></a></td>
-                        <td><a th:href="'/profile/'+${followperson.getUsername()}+'/view'"
+                        <td><a th:href="'/profile/'+${followperson.getUsername()}+'/'"
                                th:text="${followperson.getUsername()}"></a></td>
                     </tr>
                     </tbody>

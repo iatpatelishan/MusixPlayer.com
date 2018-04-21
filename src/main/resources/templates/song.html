@@ -150,10 +150,10 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-3">
-                                        <a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/view'"><img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${review.getReviewer().getEmailHash()}+'?s=48&d=robohash'" style="border-radius: 50%"></a>
+                                        <a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"><img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${review.getReviewer().getEmailHash()}+'?s=48&d=robohash'" style="border-radius: 50%"></a>
 
                                         <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
-                                           ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/view'"  th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
+                                        ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"  th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
                                         <form action="/review/flag" method="POST">
                                             <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                             <input type="hidden" th:value="${songMbid}" name="mbid"/>
