@@ -18,6 +18,7 @@
             margin: 0 auto;
         }
     </style>
+    <!-- for ratings -->
     <script src="/js/jquery.combostars.js"></script>
 
 
@@ -207,6 +208,7 @@
 <div th:replace="fragments/footer :: footer"/>
 <script>
     $(document).ready(function () {
+        $('.combostar').combostars();
         $('.editform').toggle();
         $('.editbutton').on('click', function () {
             $(this).siblings('.editform').toggle();
@@ -214,8 +216,8 @@
             $(this).parent().siblings('.reviewprintedtext').toggle();
         })
     });
-
 </script>
+
 <script src='https://cdn.plyr.io/2.0.7/plyr.js'></script>
 <script>
     (function () {
@@ -267,12 +269,6 @@
             });
         });
     })();
-</script>
-
-<script>
-    $(function () {
-        $('.combostar').combostars();
-    });
 </script>
 </body>
 </html>
