@@ -13,7 +13,7 @@
 
 
             <h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h2>
-            Fetch and Update Top 500 Songs in
+            Fetch and Update Top Songs in
 
             <form th:action="@{/admin/fetchtop500songs}" method="post">
                 <select name="country">
