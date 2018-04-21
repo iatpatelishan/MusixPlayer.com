@@ -39,7 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     "/confirm",
                     "/home",
                     "/about",
-                    "/profile/**",
+                    "/profile/**/view",
                     "/song/**",
                     "/artist/**","/review/flag","/artistreview/flag","/css/**","/js/**","/img/**")
                 .permitAll()
