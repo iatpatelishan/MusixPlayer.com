@@ -10,10 +10,12 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
@@ -132,7 +134,20 @@ public class ProfileController {
     }
 
     @PostMapping("/{username}/delete")
-    public void deleteProfile(@PathVariable("username") String username) {
-        personService.deletePerson(username);
+    public void deleteProfile(@PathVariable("username") String username, ModelAndView modelAndView, BindingResult bindingResult, Principal principal, HttpSession session) {
+
+        String requestURI = "/";
+        Person person = personService.findByUsername(principal.getName()).orElse(null);
+        String currentUserRole = person.getRole().getName();
+
+        if (username.equals(principal.getName())||currentUserRole.equals("ADMIN")){
+            personService.deletePerson(username);
+            modelAndView.setViewName("redirect:"+requestURI);
+        }
+
+        else
+        {
+            modelAndView.setViewName("redirect:"+requestURI+"?wronguser");
+        }
     }
 }
