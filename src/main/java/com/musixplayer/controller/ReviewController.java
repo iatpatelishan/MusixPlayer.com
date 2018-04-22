@@ -167,15 +167,18 @@ public class ReviewController {
 
         if (review != null && person != null) {
             Collection<Person> likedBy = review.getLikedBy();
+            Collection<Review> likedReviews = person.getLikedReviews();
 
-            if (!likedBy.contains(person)) {
-                likedBy.add(person);
-                review.setLikedBy(likedBy);
-                reviewService.create(review);
+            if ((!likedBy.contains(person)) && (!likedReviews.contains(review))) {
+                likedReviews.add(review);
+                person.setLikedReviews(likedReviews);
+                person = personService.create(person);
+
             }else{
-                likedBy.remove(person);
-                review.setLikedBy(likedBy);
-                reviewService.create(review);
+
+                likedReviews.remove(review);
+                person.setLikedReviews(likedReviews);
+                personService.create(person);
             }
 
             modelAndView.setViewName("redirect:" + requestURI);
