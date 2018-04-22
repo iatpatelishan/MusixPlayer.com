@@ -1,8 +1,10 @@
 package com.musixplayer.controller;
 
 
+import com.musixplayer.model.Artist;
 import com.musixplayer.model.Person;
 import com.musixplayer.model.Review;
+import com.musixplayer.service.ArtistService;
 import com.musixplayer.service.PersonService;
 import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +31,25 @@ import java.util.Optional;
 public class ProfileController {
 
     private PersonService personService;
+    private ArtistService artistService;
 
     @Autowired
-    public ProfileController(PersonService personService) {
+    public ProfileController(PersonService personService, ArtistService artistService) {
         this.personService = personService;
+        this.artistService = artistService;
     }
 
     @GetMapping("/{username}/")
     public ModelAndView getProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal) {
         Person profile = personService.findByUsername(username).orElse(null);
-        modelAndView.addObject("profile", profile);
+        if(profile.getRole().getName().equals("ARTIST")){
+            Artist profileartist = artistService.findByUsername(username).orElse(null);
+            System.out.println("ARTIST PROFILE REQUESTED");
+            modelAndView.addObject("profile", profileartist);
+        }
+        else{
+            modelAndView.addObject("profile", profile);
+        }
 
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -81,7 +92,7 @@ public class ProfileController {
     }
 
     @PostMapping("/{username}/edit")
-    public ModelAndView editProfileDetails(ModelAndView modelAndView, RedirectAttributes redir, @PathVariable("username") String username, @RequestParam Map requestParams, Principal principal) {
+    public ModelAndView editProfileDetails(ModelAndView modelAndView, RedirectAttributes redir, @PathVariable("username") String username, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal) {
         String requestURI = "/profile/" + username + "/edit";
 
         String email = (String) requestParams.get("email");
@@ -91,8 +102,17 @@ public class ProfileController {
         Person loggedinPerson = personService.findByUsername(principal.getName()).orElse(null);
         Person toEditPerson = personService.findByUsername(username).orElse(null);
 
-        if(loggedinPerson.getUsername().equals(toEditPerson.getUsername()) || loggedinPerson.getRole().equals("EDITOR") || loggedinPerson.getRole().equals("ADMIN")){
+        if(loggedinPerson.getUsername().equals(toEditPerson.getUsername())  || loggedinPerson.getRole().equals("ADMIN")){
             if(email!=null){
+                Person emailExists = personService.findByEmail(email).orElse(null);
+                if (emailExists != null && !emailExists.getUsername().equals(toEditPerson.getUsername())) {
+                    modelAndView.addObject("alreadyRegisteredMessage", "Oops!  This email has been used already!");
+                    modelAndView.addObject("profile", toEditPerson);
+                    modelAndView.addObject("mxuser", loggedinPerson);
+                    modelAndView.setViewName("editprofile");
+                    bindingResult.reject("email");
+                    return modelAndView;
+                }
                 toEditPerson.setEmail(email);
                 String emailHash;
                 try {
