@@ -57,7 +57,7 @@
                         <a th:href="'/profile/'+${person.getUsername()}+'/update'" </a>
                     </td>
                     <td>
-                        <form th:action="'/profile/'+${person.getUsername()}+'delete'" method="POST">
+                        <form th:action="'/profile/'+${person.getUsername()}+'/delete'" method="POST">
                         <button type="submit" class="btn btn-danger btn-sm">Delete</button>
                         </form>
                     </td>
