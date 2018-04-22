@@ -92,6 +92,14 @@
 
                 <b>Views: <span th:text="${songViews}"></span></b>
                 <br/>
+                <div class="row" sec:authorize="isAuthenticated()"
+                     th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                <form action="/song/delete" method="POST">
+                    <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                    <button type="submit" class="btn btn-danger btn-sm">Delete </button>
+                </form>
+                </div>
+                <br/>
 
                 <b>Description:</b> <span th:utext="${songDescription}"></span>
                 <br/>

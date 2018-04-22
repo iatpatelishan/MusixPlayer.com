@@ -2,9 +2,7 @@ package com.musixplayer.controller;
 
 
 import com.musixplayer.model.Person;
-import com.musixplayer.model.Review;
 import com.musixplayer.service.PersonService;
-import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

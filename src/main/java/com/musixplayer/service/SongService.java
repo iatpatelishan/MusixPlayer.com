@@ -152,4 +152,14 @@ public class SongService {
 
     }
 
+    public void deleteSongByMbid(String mbid){
+
+        Song song = songRepository.findByMbId(mbid).orElse(null);
+
+        if(song != null){
+
+            songRepository.delete(song);
+        }
+    }
+
 }

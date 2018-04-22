@@ -54,7 +54,7 @@
                     <td th:text="${person.getLastName()}"></td>
                     <td th:text="${person.getRole().getName()}"></td>
                     <td>
-                        <a th:href="'/profile/'+${person.getUsername()}+'/update'" </a>
+                        <a th:href="'/profile/'+${person.getUsername()}+'/edit'">Update</a>
                     </td>
                     <td>
                         <form th:action="'/profile/'+${person.getUsername()}+'/delete'" method="POST">

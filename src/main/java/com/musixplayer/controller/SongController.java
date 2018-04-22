@@ -1,8 +1,10 @@
 package com.musixplayer.controller;
 
+import com.musixplayer.model.Artist;
 import com.musixplayer.model.ArtistData;
 import com.musixplayer.model.Person;
 import com.musixplayer.model.Song;
+import com.musixplayer.service.ArtistService;
 import com.musixplayer.service.PersonService;
 import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +12,15 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.swing.plaf.synth.SynthColorChooserUI;
 import java.security.Principal;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -26,20 +29,21 @@ public class SongController {
 
     private SongService songService;
     private PersonService personService;
+    private ArtistService artistService;
 
     @Autowired
-    public SongController(SongService songService, PersonService personService) {
+    public SongController(SongService songService, PersonService personService, ArtistService artistService) {
         this.songService = songService;
         this.personService = personService;
+        this.artistService = artistService;
     }
 
     @GetMapping("/{mbid}")
     public ModelAndView getSong(ModelAndView modelAndView, @PathVariable("mbid") String mbId, Principal principal) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            Optional<Person> mxuser= personService.findByUsername(principal.getName());
-            if(mxuser.isPresent()){
+            Optional<Person> mxuser = personService.findByUsername(principal.getName());
+            if (mxuser.isPresent()) {
                 modelAndView.addObject("mxuser", mxuser.get());
             }
         }
@@ -52,19 +56,19 @@ public class SongController {
 
         // on every click update view count by 1
         int views;
-        if(song.getViews()== null)
-            views=0;
+        if (song.getViews() == null)
+            views = 0;
         else views = song.getViews();
         song = songService.updateSongViews(views + 1, song.getId());
 
         // for song duration
-        int seconds,minutes;
-        if(song.getDuration()== null) {
+        int seconds, minutes;
+        if (song.getDuration() == null) {
             seconds = 0;
             minutes = 0;
         } else {
-            minutes = (song.getDuration())/(1000 * 60);
-            seconds = (song.getDuration()/ 1000) % 60;
+            minutes = (song.getDuration()) / (1000 * 60);
+            seconds = (song.getDuration() / 1000) % 60;
         }
 
         modelAndView.addObject("songMbid", mbId);
@@ -76,22 +80,22 @@ public class SongController {
         modelAndView.addObject("songMinuteDuration", minutes);
         modelAndView.addObject("songSecondsDuration", seconds);
 
-        if(song.getYoutubeUrl() != null){
+        if (song.getYoutubeUrl() != null) {
             modelAndView.addObject("songLyrics", song.getLyrics());
             modelAndView.addObject("newLineChar", '\n');
         }
 
-        if(song.getImageUrl() == null){
+        if (song.getImageUrl() == null) {
             modelAndView.addObject("songImageUrl", "https://i.imgur.com/fhQ16yL.jpg");
-        }else{
+        } else {
             modelAndView.addObject("songImageUrl", song.getImageUrl());
         }
-        if(song.getYoutubeUrl() != null){
+        if (song.getYoutubeUrl() != null) {
             modelAndView.addObject("songYoutubeLink", song.getYoutubeUrl());
         }
         if (song.getDescription() == null) {
             modelAndView.addObject("songDescription", "No description found for this song");
-        }else{
+        } else {
             modelAndView.addObject("songDescription", song.getDescription());
         }
 
@@ -103,4 +107,36 @@ public class SongController {
         return modelAndView;
     }
 
+    @PostMapping("/delete")
+    public ModelAndView deleteSong(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, Principal principal) {
+
+        String songMbid = (String) requestParams.get("mbid");
+        String requestURI = "/";
+        Song song = songService.findSongByMbid(songMbid).orElse(null);
+
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser!=null && song != null) {
+                String currentUserRole = mxuser.getRole().getName();
+                boolean songowner= false;
+                if(currentUserRole.equals("ARTIST")){
+                    Artist mxartist = artistService.findByUsername(principal.getName()).orElse(null);
+                    if(mxartist.getArtistData().getSongs().contains(song)){
+                        songowner=true;
+                    }
+                }
+
+                if(currentUserRole.equals("ADMIN") || currentUserRole.equals("ADMIN") || songowner){
+
+                    songService.deleteSongByMbid(songMbid);
+                }
+
+            }
+        }
+
+        modelAndView.setViewName("redirect:" + requestURI);
+        return modelAndView;
+    }
 }
