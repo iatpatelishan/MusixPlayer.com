@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+<div class="mycontainer">
+    <div th:replace="fragments/header :: header"/>
+
+    <div class="container">
+
+        <div class="starter-template">
+
+
+            <h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! Create New User!</h2>
+
+            <div class="row">
+                <div class="col-12" style="max-width: 400px;">
+                    <form method="POST">
+                        <fieldset>
+                            <div class="form-group">
+                                <label for="firstname">First Name</label>
+                                <input type="text" class="form-control" id="firstname" placeholder="Enter First Name"
+                                       name="firstname" maxlength="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastname">Last Name</label>
+                                <input type="text" class="form-control" id="lastname" placeholder="Enter Last Name"
+                                       name="lastname" maxlength="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" class="form-control" id="email" placeholder="Enter Email"
+                                       name="email" maxlength="30" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" class="form-control" id="username" placeholder="Enter Username"
+                                       name="username" maxlength="30" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" class="form-control" id="password"
+                                       placeholder="Enter Password" name="password" maxlength="30" required>
+                            </div>
+                            <fieldset>
+                                <legend>Registeration Type</legend>
+                                <div class="form-group">
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio1" name="usertype"
+                                               class="custom-control-input" checked="" value="user">
+                                        <label class="custom-control-label" for="customRadio1"
+                                               onclick='$(".mbiddiv").hide()'>User</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio2" name="usertype"
+                                               class="custom-control-input" value="artist">
+                                        <label class="custom-control-label" for="customRadio2"
+                                               onclick='$(".mbiddiv").show()'>Artist</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio3" name="usertype"
+                                               class="custom-control-input" value="editor">
+                                        <label class="custom-control-label" for="customRadio3"
+                                               onclick='$(".mbiddiv").hide()'>Editor</label>
+                                    </div>
+                                    <div class="custom-control custom-radio">
+                                        <input type="radio" id="customRadio4" name="usertype"
+                                               class="custom-control-input" value="admin">
+                                        <label class="custom-control-label" for="customRadio4"
+                                               onclick='$(".mbiddiv").hide()'>Admin</label>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-group" id="mbiddiv">
+                                <span class="input-group-addon">
+                                     <span class="glyphicon glyphicon-lock"></span>
+                                </span>
+                                <input name="mbid" type="text" id="mbid" placeholder="MusicBrainz ID (Optional)"
+                                       class="form-control"/>
+                                <span class="glyphicon" aria-hidden="true"></span>
+                            </div>
+                        </fieldset>
+
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Register"/>
+                        </div>
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+</div>
+<div th:replace="fragments/footer :: footer"/>
+
+
+<script>
+    $(document).ready(function(){
+        $("#mbiddiv").hide();
+        $("#customRadio1, #customRadio3, #customRadio4").click(function(){
+            $("#mbiddiv").hide();
+        });
+        $("#customRadio2").click(function(){
+            $("#mbiddiv").show();
+        });
+    });
+</script>
+
+</body>
+</html>

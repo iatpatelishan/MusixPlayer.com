@@ -219,7 +219,12 @@ public class ProfileController {
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
             if (mxuser != null && playlist != null && song!=null && profile.getUsername().equals(mxuser.getUsername())) {
-                playlist.getSongs().add(song);
+                if(playlist.getSongs()==null){
+                    playlist.setSongs(new ArrayList<Song>());
+                }
+                if(!playlist.getSongs().contains(song)){
+                    playlist.getSongs().add(song);
+                }
                 playlist=playlistService.create(playlist);
             } else {
                 modelAndView.setViewName("error/403");

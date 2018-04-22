@@ -252,8 +252,7 @@
                 <a th:href="'/song/' + ${song.getMbId()}"> <img class="card-img-top" th:src="${song.getImageUrl()}"
                                                                 alt="Card image cap"></a>
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${song.getName()}"></h5>
-
+                    <h5 class="card-title"><a th:href="'/song/' + ${song.getMbId()}" th:text="${song.getName()}"></a></h5>
                 </div>
             </div>
         </div>

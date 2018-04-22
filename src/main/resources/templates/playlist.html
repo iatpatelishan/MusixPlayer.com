@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div class="mycontainer">
+
+    <div th:replace="fragments/header :: header"/>
+
+    <div class="container">
+
+
+        <br/>
+        <div class="row">
+            <div class="col-12">
+                <h1 th:text="${playlist.getName()}">Playlist</h1>
+                <h6><a th:href="'/profile/'+${playlist.getCreatedBy().getUsername()}+'/'" th:text="'By '+${playlist.getCreatedBy().getUsername()}"></a></h6>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12" style="margin-top: 20px;">
+              <div th:if="${(playlist.getSongs() == null)}">
+                    <h2>Oops!! No Song added to this playlist </h2>
+                </div>
+
+                <div class="card-columns"  style="column-count: 5;">
+                    <div class="card" th:each="song : ${playlist.getSongs()}"  th:if="${(playlist.getSongs() != null)}">
+                        <a th:href="'/song/' + ${song.getMbId()}">  <img class="card-img-top" th:src="${song.getImageUrl()}" alt="Card image cap" style="height:100%;width:100%"></a>
+                        <div class="card-body">
+                            <h5 class="card-title" ><a th:href="'/song/' + ${song.getMbId()}" th:text="${song.getName()}"></a></h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>

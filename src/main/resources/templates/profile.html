@@ -179,7 +179,7 @@
                         <td>Name</td>
                     </tr>
                     <tr th:each="playlist : ${profile.getPlaylists()}">
-                        <td><a th:href="'/playlist/'+${playlist.getId()}"
+                        <td><a th:href="'/playlist/'+${playlist.getId()}+'/'"
                                th:text="${playlist.getName()}"></a></td>
                     </tr>
 

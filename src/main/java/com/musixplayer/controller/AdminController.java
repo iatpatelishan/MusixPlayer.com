@@ -1,6 +1,5 @@
 package com.musixplayer.controller;
 
-import com.fasterxml.jackson.core.JsonParser;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +27,6 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private Environment env;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private PersonService personService;
     private EmailService emailService;
@@ -44,8 +42,7 @@ public class AdminController {
 
 
     @Autowired
-    public AdminController(Environment env, BCryptPasswordEncoder bCryptPasswordEncoder, PersonService personService, EmailService emailService, RoleService roleService, ArtistDataService artistDataService, UserService userService, ArtistService artistService, EditorService editorService, AdminService adminService, SongService songService, Top500SongsService top500SongsService) {
-        this.env = env;
+    public AdminController(BCryptPasswordEncoder bCryptPasswordEncoder, PersonService personService, EmailService emailService, RoleService roleService, ArtistDataService artistDataService, UserService userService, ArtistService artistService, EditorService editorService, AdminService adminService, SongService songService, Top500SongsService top500SongsService) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.personService = personService;
         this.emailService = emailService;
@@ -57,7 +54,6 @@ public class AdminController {
         this.artistDataService = artistDataService;
         this.songService = songService;
         this.top500SongsService = top500SongsService;
-
     }
 
 
@@ -66,6 +62,12 @@ public class AdminController {
     public ModelAndView showRegistrationPage(ModelAndView modelAndView){
         modelAndView.addObject("listOfUsers", adminService.findAllPerson());
         modelAndView.setViewName("admin");
+        return modelAndView;
+    }
+
+    @GetMapping("/createuser")
+    public ModelAndView showCreateUserPage(ModelAndView modelAndView){
+        modelAndView.setViewName("admin/createuser");
         return modelAndView;
     }
 
