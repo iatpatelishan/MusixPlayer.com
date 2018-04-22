@@ -204,7 +204,6 @@ public class ProfileController {
 
                 request.getSession().invalidate();
             }
-
             personService.deletePerson(username);
             modelAndView.setViewName("redirect:"+requestURI);
         }
