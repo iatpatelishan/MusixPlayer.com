@@ -11,7 +11,7 @@ import java.util.Collection;
 @Table(name = "role")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "role_id")
     @Getter
     @Setter
@@ -22,14 +22,14 @@ public class Role {
     @Setter
     private String name;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "role_privilege", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "privilege_id"))
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Privilege> privileges;
 
-    @OneToMany(mappedBy = "role")
+    @OneToMany(mappedBy = "role",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Getter @Setter private Collection<Person> people;
 

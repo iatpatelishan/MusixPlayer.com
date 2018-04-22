@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Entity
 public class Lyrics {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "lyrics_id")
     @Getter
     @Setter

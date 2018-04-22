@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 public class ArtistData {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "artistData_id")
     @Getter
     @Setter
@@ -62,7 +62,7 @@ public class ArtistData {
     @Setter
     private String description;
 
-    @ManyToMany(mappedBy = "artists")
+    @ManyToMany(mappedBy = "artists", cascade = CascadeType.ALL)
     @JsonIgnore
     @Getter
     @Setter

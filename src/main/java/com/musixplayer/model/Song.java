@@ -12,7 +12,7 @@ import java.util.Date;
 @Entity
 public class Song {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "song_id")
     @Getter
     @Setter
@@ -63,32 +63,32 @@ public class Song {
     @Setter
     private Date created;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "song_artistdata", joinColumns = @JoinColumn(name = "song_id"), inverseJoinColumns = @JoinColumn(name = "artistData_id"))
     @JsonIgnore
     @Getter
     @Setter
     private Collection<ArtistData> artists;
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs",cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Playlist> playlists;
 
-    @ManyToMany(mappedBy = "songs")
+    @ManyToMany(mappedBy = "songs", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Top500Songs> top500SongsList;
 
-    @OneToMany(mappedBy = "song")
+    @OneToMany(mappedBy = "song", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Lyrics> lyrics;
 
-    @OneToMany(mappedBy = "song")
+    @OneToMany(mappedBy = "song",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Getter
     @Setter

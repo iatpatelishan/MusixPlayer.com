@@ -1,5 +1,6 @@
 package com.musixplayer.service;
 
+import com.musixplayer.model.Artist;
 import com.musixplayer.model.Person;
 import com.musixplayer.repository.PersonRepository;
 import com.musixplayer.repository.RoleRepository;
@@ -42,6 +43,10 @@ public class PersonService {
         Person person = personRepository.findByUsername(username).orElse(null);
 
         if(person != null){
+            person.setFollowing(null);
+            person.setFollowedBy(null);
+            person.setLikedReviews(null);
+            person=personRepository.save(person);
             personRepository.delete(person);
         }
     }

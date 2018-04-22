@@ -45,32 +45,32 @@ public class ReviewController {
     }
 
     @PostMapping("/add")
-    public ModelAndView addReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session){
+    public ModelAndView addReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session) {
 
 
         String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String requestURI = "/song/" + songMbid;
         String reviewtext = (String) requestParams.get("reviewtext");
         Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
 
         Song song = songService.findSongByMbid(songMbid).orElse(null);
-        if(song==null){
-            modelAndView.setViewName("redirect:"+requestURI+"?wrongmbid");
+        if (song == null) {
+            modelAndView.setViewName("redirect:" + requestURI + "?wrongmbid");
         }
 
         Person reviewer = personService.findByUsername(principal.getName()).orElse(null);
-        if(reviewer==null){
-            modelAndView.setViewName("redirect:"+requestURI+"?wrongreviewer");
+        if (reviewer == null) {
+            modelAndView.setViewName("redirect:" + requestURI + "?wrongreviewer");
         }
 
-        if(reviewer.getReviews() != null && (reviewer.getUsername().equals(principal.getName()))){
-            for(Review r : reviewer.getReviews()){
-                if(r.getSong().getMbId().equals(songMbid)){
+        if (reviewer.getReviews() != null && (reviewer.getUsername().equals(principal.getName()))) {
+            for (Review r : reviewer.getReviews()) {
+                if (r.getSong().getMbId().equals(songMbid)) {
                     r.setRating(ratings);
                     r.setReview(reviewtext);
                     r.setFlagged(false);
                     reviewService.create(r);
-                    modelAndView.setViewName("redirect:"+requestURI);
+                    modelAndView.setViewName("redirect:" + requestURI);
                     return modelAndView;
                 }
             }
@@ -84,64 +84,63 @@ public class ReviewController {
         review.setSong(song);
         reviewService.create(review);
 
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
     }
 
     @PostMapping("/edit")
-    public ModelAndView editReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session){
+    public ModelAndView editReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session) {
         String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String requestURI = "/song/" + songMbid;
         String reviewtext = (String) requestParams.get("reviewtext");
         Integer ratings = Integer.parseInt((String) requestParams.get("ratings"));
 
         Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
 
         Person reviewer = personService.findByUsername(principal.getName()).orElse(null);
-        if(reviewer==null){
-            modelAndView.setViewName("redirect:"+requestURI+"?wrongreviewer");
+        if (reviewer == null) {
+            modelAndView.setViewName("redirect:" + requestURI + "?wrongreviewer");
         }
 
 
         Review review = reviewService.findReviewById(reviewId).orElse(null);
-        if(review != null){
+        if (review != null) {
             String currentUserRole = personService.findByUsername(principal.getName()).get().getRole().getName();
-            if(review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN")){
+            if (review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN")) {
                 review.setRating(ratings);
                 review.setReview(reviewtext);
                 review.setFlagged(false);
                 reviewService.create(review);
-            }
-            else{
-                modelAndView.setViewName("redirect:"+requestURI+"?NotAuthorized");
+            } else {
+                modelAndView.setViewName("redirect:" + requestURI + "?NotAuthorized");
             }
 
         }
 
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
     }
 
     @PostMapping("/flag")
     public ModelAndView flagReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams) {
         String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String requestURI = "/song/" + songMbid;
 
         Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
 
         Review review = reviewService.findReviewById(reviewId).orElse(null);
-        if(review != null){
+        if (review != null) {
             review.setFlagged(true);
             reviewService.create(review);
         }
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
     }
 
     @PostMapping("/delete")
-    public ModelAndView deleteReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams,BindingResult bindingResult, Principal principal, HttpSession session) {
+    public ModelAndView deleteReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal, HttpSession session) {
         String songMbid = (String) requestParams.get("mbid");
-        String requestURI = "/song/"+songMbid;
+        String requestURI = "/song/" + songMbid;
 
         Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
 
@@ -149,10 +148,40 @@ public class ReviewController {
 
         String currentUserRole = personService.findByUsername(principal.getName()).get().getRole().getName();
 
-        if(review != null && (review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN"))){
+        if (review != null && (review.getReviewer().getUsername().equals(principal.getName()) || currentUserRole.equals("EDITOR") || currentUserRole.equals("ADMIN"))) {
             reviewService.deleteReview(review);
         }
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
     }
+
+    @PostMapping("/likeunlike")
+    public ModelAndView likeReview(ModelAndView modelAndView, RedirectAttributes redir, @RequestParam Map requestParams) {
+        String songMbid = (String) requestParams.get("mbid");
+        String username = (String) requestParams.get("username");
+        String requestURI = "/song/" + songMbid;
+
+        Long reviewId = Long.parseLong((String) requestParams.get("reviewid"));
+        Review review = reviewService.findReviewById(reviewId).orElse(null);
+        Person person = personService.findByUsername(username).orElse(null);
+
+        if (review != null && person != null) {
+            Collection<Person> likedBy = review.getLikedBy();
+
+            if (!likedBy.contains(person)) {
+                likedBy.add(person);
+                review.setLikedBy(likedBy);
+                reviewService.create(review);
+            }else{
+                likedBy.remove(person);
+                review.setLikedBy(likedBy);
+                reviewService.create(review);
+            }
+
+            modelAndView.setViewName("redirect:" + requestURI);
+        } else
+            modelAndView.setViewName("redirect:" + requestURI + "?NotAllowed");
+        return modelAndView;
+    }
+
 }

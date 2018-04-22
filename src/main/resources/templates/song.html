@@ -198,12 +198,17 @@
                                         <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
                                         ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"
                                             th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
+                                        <h6 class="card-title mb-2 text-muted text-capitalize col-centered"><a
+                                                th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"
+                                                th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
                                         <form action="/review/flag" method="POST">
                                             <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                             <input type="hidden" th:value="${songMbid}" name="mbid"/>
                                             <button type="submit" class="btn btn-danger btn-sm">Flag</button>
                                         </form>
+
                                     </div>
+
                                     <div class="col-8">
                                         <p class="card-text reviewprintedtext" th:text="${review.getReview()}"></p>
                                         <p class="card-text reviewprintedtext"
@@ -239,6 +244,19 @@
                                             </form>
                                             <button class="btn btn-danger btn-sm editbutton">Edit</button>
                                         </div>
+
+
+                                        <span th:if="${#authorization.expression('isAuthenticated()')}">
+                                            <form action="/review/likeunlike" method="POST">
+                                                 <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
+                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                                 <input type="hidden" th:value="${#authentication.name}"
+                                                        name="username"/>
+                                            <button th:if="${#lists.contains(review.getLikedBy(),mxuser)}" type="submit" class="btn btn-danger btn-sm">Unlike</button>
+                                                <button th:if="${not #lists.contains(review.getLikedBy(),mxuser)}" type="submit"
+                                                        class="btn btn-danger btn-sm">Like</button>
+                                        </form>
+                                        </span>
                                     </div>
 
                                 </div>

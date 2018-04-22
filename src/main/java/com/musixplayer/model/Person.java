@@ -20,7 +20,7 @@ import java.util.List;
 @Accessors(chain = true)
 public class Person {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "person_id")
     @Getter
     @Setter
@@ -81,7 +81,7 @@ public class Person {
     @Setter
     private Role role;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "following", joinColumns = {
             @JoinColumn(name = "follower", referencedColumnName = "person_id", nullable = false)}, inverseJoinColumns = {
             @JoinColumn(name = "following", referencedColumnName = "person_id", nullable = false)})
@@ -97,24 +97,24 @@ public class Person {
     private Collection<Person> followedBy;
 
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Playlist> playlists;
 
-    @OneToMany(mappedBy = "reviewer")
+    @OneToMany(mappedBy = "reviewer",cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     @Getter
     @Setter
     private Collection<Review> reviews;
 
-    @OneToMany(mappedBy="artistReviewer")
+    @OneToMany(mappedBy="artistReviewer",cascade = CascadeType.ALL, orphanRemoval = true)
     @Getter
     @Setter
     private Collection<ArtistReview> artistReviewed;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "person_likes_review", joinColumns = @JoinColumn(name = "person_id", referencedColumnName = "person_id"), inverseJoinColumns = @JoinColumn(name = "review_id", referencedColumnName = "review_id"))
     @JsonIgnore
     @Getter

@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 public class Playlist {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "playlist_id")
     @Getter
     @Setter
@@ -35,7 +35,7 @@ public class Playlist {
     @Setter
     private Person createdBy;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "playlistSongs", joinColumns = @JoinColumn(name = "song_Id"), inverseJoinColumns = @JoinColumn(name = "playlist_id"))
     @JsonIgnore
     @Getter

@@ -11,7 +11,7 @@ import java.util.Collection;
 @Entity
 public class Top500Songs {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @Getter
     @Setter
@@ -22,7 +22,7 @@ public class Top500Songs {
     @Setter
     private String country;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "topSongs", joinColumns = @JoinColumn(name = "song_Id"), inverseJoinColumns = @JoinColumn(name = "id"))
     @JsonIgnore
     @Getter

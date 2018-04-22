@@ -40,6 +40,12 @@ public class SongController {
 
     @GetMapping("/{mbid}")
     public ModelAndView getSong(ModelAndView modelAndView, @PathVariable("mbid") String mbId, Principal principal) {
+        Song song = songService.findSongByMbid(mbId).orElse(songService.fetchSongandAdd(mbId));
+        if (song == null) {
+            modelAndView.setViewName("error/404");
+            return modelAndView;
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Optional<Person> mxuser = personService.findByUsername(principal.getName());
@@ -48,11 +54,7 @@ public class SongController {
             }
         }
 
-        Song song = songService.findSongByMbid(mbId).orElse(songService.fetchSongandAdd(mbId));
-        if (song == null) {
-            modelAndView.setViewName("error/404");
-            return modelAndView;
-        }
+
 
         // on every click update view count by 1
         int views;
@@ -139,4 +141,5 @@ public class SongController {
         modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
     }
+
 }
