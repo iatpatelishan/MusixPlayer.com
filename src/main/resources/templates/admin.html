@@ -43,6 +43,7 @@
                     <th>fName</th>
                     <th>lname</th>
                     <th>type</th>
+                    <th>View</th>
                     <th>Update</th>
                     <th>Delete</th>
                 </tr>
@@ -53,6 +54,9 @@
                     <td th:text="${person.getFirstName()}"></td>
                     <td th:text="${person.getLastName()}"></td>
                     <td th:text="${person.getRole().getName()}"></td>
+                    <td>
+                        <a th:href="'/profile/'+${person.getUsername()}+'/'">View</a>
+                    </td>
                     <td>
                         <a th:href="'/profile/'+${person.getUsername()}+'/edit'">Update</a>
                     </td>

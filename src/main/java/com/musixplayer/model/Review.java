@@ -46,7 +46,7 @@ public class Review {
     @Setter
     Person reviewer;
 
-    @ManyToMany(mappedBy = "likedReviews", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "likedReviews")
     @Getter
     @Setter
     private Collection<Person> likedBy;

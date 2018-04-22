@@ -3,13 +3,12 @@ package com.musixplayer.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.musixplayer.model.ArtistData;
-import com.musixplayer.model.Person;
-import com.musixplayer.model.Song;
 import com.musixplayer.repository.ArtistDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -27,6 +26,10 @@ public class ArtistDataService {
 
     public Optional<ArtistData> findByMbid(String mbid) {
         return artistDataRepository.findByMbId(mbid);
+    }
+
+    public Collection<ArtistData> findAll() {
+        return artistDataRepository.findAll();
     }
 
     public ArtistData create(ArtistData artistData) {

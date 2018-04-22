@@ -1,8 +1,10 @@
 package com.musixplayer.controller;
 
+import com.musixplayer.model.Artist;
 import com.musixplayer.model.ArtistData;
 import com.musixplayer.model.Person;
 import com.musixplayer.service.ArtistDataService;
+import com.musixplayer.service.ArtistService;
 import com.musixplayer.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -22,11 +25,13 @@ import java.util.Optional;
 public class ArtistController {
 
     private ArtistDataService artistDataService;
+    private ArtistService artistService;
     private PersonService personService;
 
     @Autowired
-    public ArtistController(ArtistDataService artistDataService, PersonService personService) {
+    public ArtistController(ArtistDataService artistDataService, PersonService personService, ArtistService artistService) {
         this.artistDataService = artistDataService;
+        this.artistService = artistService;
         this.personService = personService;
     }
 
@@ -35,9 +40,9 @@ public class ArtistController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            Optional<Person> mxuser= personService.findByUsername(principal.getName());
-            if(mxuser.isPresent()){
-                modelAndView.addObject("mxuser", mxuser.get());
+            Person mxuser= personService.findByUsername(principal.getName()).orElse(null);
+            if(mxuser!=null){
+                modelAndView.addObject("mxuser", mxuser);
             }
         }
 
@@ -45,6 +50,19 @@ public class ArtistController {
         if (artist == null) {
             modelAndView.setViewName("error/404");
             return modelAndView;
+        }
+
+        String artistPersonUsername=null;
+        if (artist != null) {
+            List<Artist> artistPersonList = artistService.findAll();
+            for(Artist artistPerson : artistPersonList) {
+                if (artistPerson.getArtistData().getId().equals(artist.getId())) {
+                    artistPersonUsername = artistPerson.getUsername();
+                }
+            }
+        }
+        if(artistPersonUsername!=null){
+            modelAndView.addObject("artistPersonUsername", artistPersonUsername);
         }
 
         modelAndView.addObject("artistMbid", mbid);

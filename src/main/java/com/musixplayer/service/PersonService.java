@@ -7,6 +7,7 @@ import com.musixplayer.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -39,9 +40,7 @@ public class PersonService {
 
 
     public void deletePerson(String username){
-
         Person person = personRepository.findByUsername(username).orElse(null);
-
         if(person != null){
             person.setFollowing(null);
             person.setFollowedBy(null);
@@ -49,6 +48,10 @@ public class PersonService {
             person=personRepository.save(person);
             personRepository.delete(person);
         }
+    }
+
+    public Collection<Person> findAll(){
+        return (Collection<Person>) personRepository.findAll();
     }
 
 }

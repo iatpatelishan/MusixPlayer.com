@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Boot Thymeleaf + Spring Security</title>
+    <title>MusixPlayer.com - Song Portal</title>
 
     <div th:replace="fragments/header :: header-css"/>
     <style>
@@ -246,9 +246,9 @@
 <div class="container clearfix">
 
     <div class="starter-template" style="margin-top: 50px">
-        <h1>Top 50 Global Songs</h1>
+        <h1>First 10 Songs</h1>
         <div class="card-columns" style="column-count: 5;">
-            <div class="card" th:each="song : ${listOfTop500Songs}">
+            <div class="card" th:each="song,pStat : ${listOfTop500Songs}" th:unless="${pStat.index > 9}">
                 <a th:href="'/song/' + ${song.getMbId()}"> <img class="card-img-top" th:src="${song.getImageUrl()}"
                                                                 alt="Card image cap"></a>
                 <div class="card-body">
@@ -256,6 +256,60 @@
                 </div>
             </div>
         </div>
+
+        <br/><br/>
+
+        <div class="row">
+            <div class="col-6">
+                <h2>Recently Registered Users</h2>
+                <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>*</th>
+                        <th>Name</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="person,pStat : ${listOfAllPersons}" th:unless="${pStat.index > 9}">
+                        <td scope="row"><a th:href="'/profile/'+${person.getUsername()}+'/'"><img
+                                th:src="'https://www.gravatar.com/avatar/'+${person.getEmailHash()}+'?s=16&d=robohash'"></a>
+                        </td>
+                        <td><a th:href="'/profile/'+${person.getUsername()}+'/'" th:text="${person.getFirstName()}+' '+${person.getLastName()} "></a></td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-6">
+                <h2>First 10 Artists</h2>
+                <table class="table table-bordered" width="100%" id="dataTable" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th>*</th>
+                        <th>Name</th>
+
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="artist,pStat : ${listOfAllArtistData}" th:unless="${pStat.index > 9}">
+                        <td scope="row"><a th:href="'/artist/'+${artist.getMbid()}+'/'"><img
+                                th:src="${artist.getImage()}" style="max-width: 16px; max-height: 16px;"></a>
+                        </td>
+                        <td><a th:href="'/artist/'+${artist.getMbid()}+'/'" th:text="${artist.getName()}"></td>
+
+
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
 
     </div>
 </div>

@@ -22,7 +22,4 @@ public interface AdminRepository extends JpaRepository<Admin, Long>{
     @Query("SELECT u FROM Admin u WHERE u.username=:username AND u.password=:password")
     Optional<Admin> findByCredentials(@Param("username") String username, @Param("password") String password);
 
-    @Query("SELECT u FROM Person u ")
-    Collection<Person> findAllPerson();
-
 }

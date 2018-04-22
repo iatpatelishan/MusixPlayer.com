@@ -111,7 +111,7 @@ public class ProfileController {
         Person loggedinPerson = personService.findByUsername(principal.getName()).orElse(null);
         Person toEditPerson = personService.findByUsername(username).orElse(null);
 
-        if(loggedinPerson.getUsername().equals(toEditPerson.getUsername())  || loggedinPerson.getRole().equals("ADMIN")){
+        if(loggedinPerson.getUsername().equals(toEditPerson.getUsername())  || loggedinPerson.getRole().getName().equals("ADMIN")){
             if(email!=null){
                 Person emailExists = personService.findByEmail(email).orElse(null);
                 if (emailExists != null && !emailExists.getUsername().equals(toEditPerson.getUsername())) {

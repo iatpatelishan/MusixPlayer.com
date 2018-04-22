@@ -1,6 +1,7 @@
 package com.musixplayer.repository;
 
 import com.musixplayer.model.Artist;
+import com.musixplayer.model.ArtistData;
 import com.musixplayer.model.Person;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> {
 
     @Query("SELECT u FROM Artist u WHERE u.username=:username AND u.password=:password")
     Optional<Artist> findByCredentials(@Param("username") String username, @Param("password") String password);
+
+    @Query("SELECT u FROM Artist u WHERE u.artistData=:artistData")
+    Optional<Artist> findByArtistDataId(@Param("artistData") ArtistData artistData);
 }

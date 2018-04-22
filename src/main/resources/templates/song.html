@@ -136,6 +136,9 @@
                 <b>Description:</b> <span th:utext="${songDescription}"></span>
                 <br/>
 
+                <b>Youtube Link:</b> <a th:href="'https://www.youtube.com/watch?v='+${songYoutubeLink}" th:text="'https://www.youtube.com/watch?v='+${songYoutubeLink}" target="_blank"></a>
+                <br/>
+
                 <div th:if="songLyrics != null">
                     <br>
 
@@ -198,9 +201,6 @@
                                         <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
                                         ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"
                                             th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
-                                        <h6 class="card-title mb-2 text-muted text-capitalize col-centered"><a
-                                                th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"
-                                                th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
                                         <form action="/review/flag" method="POST">
                                             <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                             <input type="hidden" th:value="${songMbid}" name="mbid"/>

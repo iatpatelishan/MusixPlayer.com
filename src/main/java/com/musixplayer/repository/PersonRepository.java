@@ -21,4 +21,5 @@ public interface PersonRepository extends CrudRepository<Person, Long> {
 
    @Query("SELECT u FROM Person u WHERE u.username=:username AND u.password=:password")
     Optional<Person> findByCredentials(@Param("username") String username, @Param("password") String password);
+
 }

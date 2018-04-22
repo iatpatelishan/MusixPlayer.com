@@ -14,19 +14,34 @@
 
             <h2 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]! Create New User!</h2>
 
+            <div th:if="${confirmationMessage}" class="alert alert-success"
+                 role="alert" th:text=${confirmationMessage}></div>
+
+            <div th:if="${errorMessage}"
+                 class="alert alert-danger" role="alert"
+                 th:text="${errorMessage}"></div>
+
+            <div th:if="${alreadyRegisteredMessage}"
+                 class="alert alert-danger" role="alert"
+                 th:text="${alreadyRegisteredMessage}"></div>
+
+            <div th:if="${wrongmbidmessage}"
+                 class="alert alert-danger" role="alert"
+                 th:text="${wrongmbidmessage}"></div>
+            <div class="col-12" style="max-width: 400px;">
+
             <div class="row">
-                <div class="col-12" style="max-width: 400px;">
                     <form method="POST">
                         <fieldset>
                             <div class="form-group">
-                                <label for="firstname">First Name</label>
+                                <label for="firstName">First Name</label>
                                 <input type="text" class="form-control" id="firstname" placeholder="Enter First Name"
-                                       name="firstname" maxlength="30" required>
+                                       name="firstName" maxlength="30" required>
                             </div>
                             <div class="form-group">
-                                <label for="lastname">Last Name</label>
+                                <label for="lastName">Last Name</label>
                                 <input type="text" class="form-control" id="lastname" placeholder="Enter Last Name"
-                                       name="lastname" maxlength="30" required>
+                                       name="lastName" maxlength="30" required>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email</label>

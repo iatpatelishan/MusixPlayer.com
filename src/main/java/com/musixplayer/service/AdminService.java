@@ -1,26 +1,21 @@
 package com.musixplayer.service;
 
 import com.musixplayer.model.Admin;
-import com.musixplayer.model.Person;
 import com.musixplayer.repository.AdminRepository;
-import com.musixplayer.repository.PersonRepository;
-import com.musixplayer.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AdminService {
 
     private final AdminRepository adminRepository;
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public AdminService(AdminRepository adminRepository, RoleRepository roleRepository) {
+    public AdminService(AdminRepository adminRepository) {
         this.adminRepository = adminRepository;
-        this.roleRepository = roleRepository;
     }
 
     public Optional<Admin> findByUsername(String username) {
@@ -39,8 +34,8 @@ public class AdminService {
         return adminRepository.save(admin);
     }
 
-    public Collection<Person> findAllPerson(){
-        return adminRepository.findAllPerson();
+    public List<Admin> findAll(){
+        return adminRepository.findAll();
     }
 
 
