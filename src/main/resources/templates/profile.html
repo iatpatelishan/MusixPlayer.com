@@ -17,23 +17,28 @@
         <div class="row">
             <div class="col-8">
                 <h1><span th:text="${profile.getFirstName()}+' '+${profile.getLastName()}"></span></h1>
+                <div class="row">
+                    <div class="col-2 " sec:authorize="isAuthenticated()"
+                         th:if="${mxuser.getRole().getName()} != 'ARTIST' and  ${profile.getUsername()}!=${#authentication.name}">
+                        <form action="/profile/followunfollow" method="POST">
+                            <input type="hidden" name="followperson" th:value="${profile.getUsername()}">
+                            <div th:if="${alreadyfollowed} == true">
+                                <button type="submit" class="btn btn-outline-primary">Unfollow</button>
+                            </div>
+                            <div th:if="${alreadyfollowed} != true">
+                                <button type="submit" class="btn btn-outline-primary">follow</button>
+                            </div>
+                        </form>
 
-                <div class="col-12 mx-auto" sec:authorize="isAuthenticated()"
-                     th:if="${mxuser.getRole().getName()} != 'ARTIST' and  ${profile.getUsername()}!=${#authentication.name}">
-                    <form action="/profile/followunfollow" method="POST">
-                        <input type="hidden" name="followperson" th:value="${profile.getUsername()}">
-                        <div th:if="${alreadyfollowed} == true">
-                            <button type="submit" class="btn btn-outline-primary">Unfollow</button>
-                        </div>
-                        <div th:if="${alreadyfollowed} != true">
-                            <button type="submit" class="btn btn-outline-primary">follow</button>
-                        </div>
-                    </form>
-                </div>
-                <div class="col-12 mx-auto" sec:authorize="isAuthenticated()"
-                     th:if="${profile.getUsername()}==${#authentication.name}">
-
-                    <a href="./edit" class="btn btn-outline-primary">Edit</a>
+                    </div>
+                    <div class="col-2" sec:authorize="isAuthenticated()"
+                         th:if="${profile.getUsername()}==${#authentication.name} OR ${mxuser.getRole().getName()} == 'ADMIN'">
+                        <a href="./edit" class="btn btn-outline-primary">Edit</a>
+                    </div>
+                    <div class="col-2"
+                         th:if="${profile.getRole().getName()} == 'ARTIST'">
+                        <a th:href="'/artist/'+${profile.getArtistData().getMbid()}+'/'" class="btn btn-outline-primary">View Artist Page</a>
+                    </div>
                 </div>
 
 
@@ -48,7 +53,7 @@
     </div>
 
     <div class="container" style="margin-top: 100px">
-        <div class="row"  th:if="${profile.getRole().getName()} != 'ARTIST'">
+        <div class="row" th:if="${profile.getRole().getName()} != 'ARTIST'">
             <div class="col-6">
                 <h5>Following </h5>
                 <table class="table ">
