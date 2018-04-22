@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     @Getter
     @Setter
@@ -46,7 +46,7 @@ public class Review {
     @Setter
     Person reviewer;
 
-    @ManyToMany(mappedBy = "likedReviews")
+    @ManyToMany(mappedBy = "likedReviews", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @Getter
     @Setter
     private Collection<Person> likedBy;

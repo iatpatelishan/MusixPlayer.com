@@ -10,7 +10,7 @@ import java.util.Date;
 @Entity
 public class ArtistReview {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "review_id")
     @Getter
     @Setter
