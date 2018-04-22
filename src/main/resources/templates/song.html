@@ -101,7 +101,8 @@
                                             <form action="/song/delete" method="POST" sec:authorize="isAuthenticated()"
                                                   th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
-                                                <button type="submit" class="btn btn-danger" style="float: left; margin-left: 5px;">
+                                                <button type="submit" class="btn btn-danger"
+                                                        style="float: left; margin-left: 5px;">
                                                     Delete Song
                                                 </button>
                                             </form>
@@ -136,7 +137,9 @@
                 <b>Description:</b> <span th:utext="${songDescription}"></span>
                 <br/>
 
-                <b>Youtube Link:</b> <a th:href="'https://www.youtube.com/watch?v='+${songYoutubeLink}" th:text="'https://www.youtube.com/watch?v='+${songYoutubeLink}" target="_blank"></a>
+                <b>Youtube Link:</b> <a th:href="'https://www.youtube.com/watch?v='+${songYoutubeLink}"
+                                        th:text="'https://www.youtube.com/watch?v='+${songYoutubeLink}"
+                                        target="_blank"></a>
                 <br/>
 
                 <div th:if="songLyrics != null">
@@ -218,11 +221,24 @@
                                         <div class="row" sec:authorize="isAuthenticated()"
                                              th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
 
-                                            <form action="/review/delete" method="POST">
+                                            <form action="/review/delete" method="POST" class="deletereview">
                                                 <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
-                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                <button type="submit" class="btn btn-danger btn-sm"  style="margin-left:10px;">Delete</button>
                                             </form>
+
+                                            <form action="/review/likeunlike" method="POST" class="likereview">
+                                                <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
+                                                <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                                <input type="hidden" th:value="${#authentication.name}"
+                                                       name="username"/>
+                                                <button th:if="${#lists.contains(review.getLikedBy(),mxuser)}" type="submit"
+                                                        class="btn btn-danger btn-sm"  style="margin-left:10px;">Unlike</button>
+                                                <button th:if="${not #lists.contains(review.getLikedBy(),mxuser)}"
+                                                        type="submit"
+                                                        class="btn btn-danger btn-sm" style="margin-left:10px;">Like</button>
+                                            </form>
+
 
                                             <form action="/review/edit" method="POST" class="editform">
                                                 <textarea class="form-control" rows="3" name="reviewtext"
@@ -240,23 +256,15 @@
                                                 </div>
                                                 <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
-                                                <button type="submit" class="btn btn-danger btn-sm">Edit</button>
+                                                <button type="submit" class="btn btn-danger btn-sm"  style="margin-left:10px;">Edit</button>
                                             </form>
-                                            <button class="btn btn-danger btn-sm editbutton">Edit</button>
+                                            <button class="btn btn-danger btn-sm editbutton"  style="margin-left:10px;">Edit</button>
+
+
+
                                         </div>
 
 
-                                        <span th:if="${#authorization.expression('isAuthenticated()')}">
-                                            <form action="/review/likeunlike" method="POST">
-                                                 <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
-                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
-                                                 <input type="hidden" th:value="${#authentication.name}"
-                                                        name="username"/>
-                                            <button th:if="${#lists.contains(review.getLikedBy(),mxuser)}" type="submit" class="btn btn-danger btn-sm">Unlike</button>
-                                                <button th:if="${not #lists.contains(review.getLikedBy(),mxuser)}" type="submit"
-                                                        class="btn btn-danger btn-sm">Like</button>
-                                        </form>
-                                        </span>
                                     </div>
 
                                 </div>
@@ -283,6 +291,8 @@
             $(this).siblings('.editform').toggle();
             $(this).toggle();
             $(this).parent().siblings('.reviewprintedtext').toggle();
+            $(this).siblings('.deletereview').toggle();
+            $(this).siblings('.likereview').toggle();
         })
     });
 </script>
