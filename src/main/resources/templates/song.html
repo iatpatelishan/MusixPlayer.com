@@ -68,6 +68,45 @@
                                             </button>
                                         </div>
                                     </div>
+
+                                    <div style="margin: 0 auto;max-width: 300px; margin-top: 20px;"
+                                         sec:authorize="isAuthenticated()">
+                                        <hr>
+
+
+                                        <form th:action="'/profile/'+${mxuser.getUsername()}+'/playlist/addsong'"
+                                              method="POST" th:if="${ #lists.size(mxuser.getPlaylists()) &gt; 0}">
+
+
+                                            <div class="form-group">
+                                                <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                                <label for="playlist">Add Song to Existing Playlist</label>
+                                                <div class="input-group mb-3">
+                                                    <select class="form-control" id="playlist" name="playlistid">
+                                                        <option disabled>Select a Playlist</option>
+                                                        <option th:each="playlist : ${mxuser.getPlaylists()}"
+                                                                th:value="${playlist.getId()}"
+                                                                th:text="${playlist.getName()}"/>
+                                                    </select>
+                                                    <button type="submit" class="btn btn-outline-info"
+                                                            style="margin: 0 auto;max-width: 150px; margin-left: 10px;">
+                                                        Add
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <hr>
+                                        <div><a th:href="'/profile/'+${mxuser.getUsername()}+'/playlist/create'"
+                                                class="btn btn-outline-info " style="float: left;">Create Playlist</a>
+                                            <form action="/song/delete" method="POST" sec:authorize="isAuthenticated()"
+                                                  th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                                <input type="hidden" th:value="${songMbid}" name="mbid"/>
+                                                <button type="submit" class="btn btn-danger" style="float: left; margin-left: 5px;">
+                                                    Delete Song
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -92,14 +131,7 @@
 
                 <b>Views: <span th:text="${songViews}"></span></b>
                 <br/>
-                <div class="row" sec:authorize="isAuthenticated()"
-                     th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
-                <form action="/song/delete" method="POST">
-                    <input type="hidden" th:value="${songMbid}" name="mbid"/>
-                    <button type="submit" class="btn btn-danger btn-sm">Delete </button>
-                </form>
-                </div>
-                <br/>
+
 
                 <b>Description:</b> <span th:utext="${songDescription}"></span>
                 <br/>
@@ -134,7 +166,7 @@
                                       name="reviewtext"></textarea>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-2 col-form-label">Ratings:</label>
+                            <label class="col-sm-2 col-form-label">Rate:</label>
                             <div style="margin-top: 10px">
                                 <select class="combostar" name="ratings">
                                     <option value="1">1</option>
@@ -158,10 +190,14 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-3">
-                                        <a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"><img title="profile image" class="img-circle img-responsive" th:src="'https://www.gravatar.com/avatar/'+${review.getReviewer().getEmailHash()}+'?s=48&d=robohash'" style="border-radius: 50%"></a>
+                                        <a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"><img
+                                                title="profile image" class="img-circle img-responsive"
+                                                th:src="'https://www.gravatar.com/avatar/'+${review.getReviewer().getEmailHash()}+'?s=48&d=robohash'"
+                                                style="border-radius: 50%"></a>
 
                                         <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
-                                        ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"  th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
+                                        ><a th:href="'/profile/'+${review.getReviewer().getUsername()}+'/'"
+                                            th:text="${review.getReviewer().getUsername()} + '  '"></a></h6>
                                         <form action="/review/flag" method="POST">
                                             <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                             <input type="hidden" th:value="${songMbid}" name="mbid"/>
@@ -170,7 +206,8 @@
                                     </div>
                                     <div class="col-8">
                                         <p class="card-text reviewprintedtext" th:text="${review.getReview()}"></p>
-                                        <p class="card-text reviewprintedtext" th:text="'Rating: '+${review.getRating()}"></p>
+                                        <p class="card-text reviewprintedtext"
+                                           th:text="'Rating: '+${review.getRating()}"></p>
                                         <p class="alert alert-dismissible alert-warning"
                                            th:if="${review.getFlagged()}==true">This Review is Flagged!</p>
                                         <div class="row" sec:authorize="isAuthenticated()"

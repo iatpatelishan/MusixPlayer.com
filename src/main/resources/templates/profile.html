@@ -59,7 +59,7 @@
                 <table class="table ">
                     <tbody>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row"></th>
                         <td>Name</td>
                         <td>Username</td>
                     </tr>
@@ -83,7 +83,7 @@
                 <table class="table table-striped">
                     <tbody>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row"></th>
                         <td>Name</td>
                         <td>Username</td>
                     </tr>
@@ -110,7 +110,7 @@
                 <table class="table table-striped">
                     <tbody>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row"></th>
                         <td>Name</td>
                         <td>Username</td>
                     </tr>
@@ -132,7 +132,7 @@
                 <table class="table table-striped">
                     <tbody>
                     <tr>
-                        <th scope="row">1</th>
+                        <th scope="row"></th>
                         <td>Song</td>
                         <td>Rating Given</td>
                     </tr>
@@ -149,6 +149,45 @@
                 </table>
             </div>
         </div>
+
+        <div class="row" style="margin-top: 50px;">
+            <div class="col-6" th:if="${profile.getRole().getName()} == 'ARTIST'">
+                <h5>Songs Created</h5>
+                <table class="table table-striped">
+                    <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>Song</td>
+                    </tr>
+                    <tr th:each="song : ${profile.getArtistData().getSongs()}">
+                        <th scope="row"><a th:href="'/song/'+${song.getMbId()}"><img
+                                th:src="${song.getImageUrl()}"
+                                style="max-width: 16px; max-height: 16px;"></a></th>
+                        <td><a th:href="'/song/'+${song.getMbId()}"
+                               th:text="${song.getName()}"></a></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-6">
+                <h5>Playlists </h5>
+                <table class="table table-striped">
+                    <tbody>
+                    <tr>
+                        <td>Name</td>
+                    </tr>
+                    <tr th:each="playlist : ${profile.getPlaylists()}">
+                        <td><a th:href="'/playlist/'+${playlist.getId()}"
+                               th:text="${playlist.getName()}"></a></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
 

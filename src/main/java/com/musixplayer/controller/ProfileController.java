@@ -1,11 +1,11 @@
 package com.musixplayer.controller;
 
 
-import com.musixplayer.model.Artist;
-import com.musixplayer.model.Person;
-import com.musixplayer.model.Review;
+import com.musixplayer.model.*;
 import com.musixplayer.service.ArtistService;
 import com.musixplayer.service.PersonService;
+import com.musixplayer.service.PlaylistService;
+import com.musixplayer.service.SongService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -32,11 +33,15 @@ public class ProfileController {
 
     private PersonService personService;
     private ArtistService artistService;
+    private PlaylistService playlistService;
+    private SongService songService;
 
     @Autowired
-    public ProfileController(PersonService personService, ArtistService artistService) {
+    public ProfileController(PersonService personService, ArtistService artistService, PlaylistService playlistService, SongService songService) {
         this.personService = personService;
         this.artistService = artistService;
+        this.playlistService = playlistService;
+        this.songService = songService;
     }
 
     @GetMapping("/{username}/")
@@ -73,21 +78,25 @@ public class ProfileController {
     }
 
     @GetMapping("/{username}/edit")
-    public ModelAndView getEditProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal, RedirectAttributes redir) {
+    public ModelAndView getEditProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal, RedirectAttributes redir, HttpServletResponse response) {
+        String requestURI = "/profile/" + username + "/edit";
         Person profile = personService.findByUsername(username).orElse(null);
         modelAndView.addObject("profile", profile);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser!=null) {
-
+            if (mxuser!=null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
                 modelAndView.addObject("mxuser", mxuser);
                 modelAndView.setViewName("editprofile");
                 return modelAndView;
             }
+            else {
+                modelAndView.setViewName("error/403");
+                return modelAndView;
+            }
         }
 
-        modelAndView.setViewName("redirect: /");
+        modelAndView.setViewName("redirect: "+requestURI);
         return modelAndView;
     }
 
@@ -137,25 +146,22 @@ public class ProfileController {
         return modelAndView;
     }
 
-    @GetMapping("/{username}/createplaylist")
+    @GetMapping("/{username}/playlist/create")
     public ModelAndView getCreatePlaylist(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal) {
         Person profile = personService.findByUsername(username).orElse(null);
         modelAndView.addObject("profile", profile);
 
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser!=null) {
-                if(mxuser.getFollowing()==null){
-                    mxuser.setFollowing(new ArrayList<>());
-                }
-                if(mxuser.getFollowing().contains(profile)){
-                    modelAndView.addObject("alreadyfollowed", true);
-                }else{
-                    modelAndView.addObject("alreadyfollowed", false);
-                }
+            if (mxuser!=null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
                 modelAndView.addObject("mxuser", mxuser);
+                modelAndView.setViewName("createplaylist");
+                return modelAndView;
+            }
+            else {
+                modelAndView.setViewName("error/403");
+                return modelAndView;
             }
         }
 
@@ -163,6 +169,67 @@ public class ProfileController {
         return modelAndView;
     }
 
+
+    @PostMapping("/{username}/playlist/create")
+    public ModelAndView createPlaylist(ModelAndView modelAndView, RedirectAttributes redir, @PathVariable("username") String username, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal) {
+        String requestURI = "/profile/" + username + "/";
+        String name = (String) requestParams.get("playlistname");
+
+        Person profile = personService.findByUsername(username).orElse(null);
+        modelAndView.addObject("profile", profile);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser != null && name != null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
+                Playlist playlist = new Playlist();
+                playlist.setName(name);
+                playlist.setCreatedBy(profile);
+                playlist=playlistService.create(playlist);
+            } else {
+                modelAndView.setViewName("error/403");
+                return modelAndView;
+            }
+        }
+        modelAndView.setViewName("redirect:"+requestURI);
+        return modelAndView;
+
+    }
+
+
+    @PostMapping("/{username}/playlist/addsong")
+    public ModelAndView addSongToPlaylist(ModelAndView modelAndView, RedirectAttributes redir, @PathVariable("username") String username, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal) {
+        String playlistReqId = (String) requestParams.get("playlistid");
+        if(playlistReqId==null){
+            modelAndView.setViewName("error/403");
+            return modelAndView;
+        }
+        Long playlistId = Long.parseLong((String) requestParams.get("playlistid"));
+        String songMbid = (String) requestParams.get("mbid");
+        String requestURI = "/playlist/" + playlistId + "/";
+
+        Person profile = personService.findByUsername(username).orElse(null);
+        modelAndView.addObject("profile", profile);
+
+        Playlist playlist = playlistService.findById(playlistId).orElse(null);
+
+        Song song = songService.findSongByMbid(songMbid).orElse(null);
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser != null && playlist != null && song!=null && profile.getUsername().equals(mxuser.getUsername())) {
+                playlist.getSongs().add(song);
+                playlist=playlistService.create(playlist);
+            } else {
+                modelAndView.setViewName("error/403");
+                return modelAndView;
+            }
+        }
+        modelAndView.setViewName("redirect:"+requestURI);
+        return modelAndView;
+
+    }
 
 
     @PostMapping("/followunfollow")
