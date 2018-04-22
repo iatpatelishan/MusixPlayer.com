@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+
+<div class="mycontainer">
+
+    <div th:replace="fragments/header :: header"/>
+
+    <div class="container">
+
+
+        <br/>
+        <div class="row">
+            <div class="col-12">
+                <h1>Create Playlist</h1>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-12" style="max-width: 400px;">
+                <form method="POST">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="playlistname">Playlist Name</label>
+                            <input type="text" class="form-control" id="playlistname" placeholder="Enter Playlist Name" name="playlistname" maxlength="30">
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="btn btn-primary" style="float:left;" >Create Playlist</button>
+                    </fieldset>
+                </form>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+</div>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
+
+</body>
+</html>
