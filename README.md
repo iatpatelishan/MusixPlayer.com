@@ -24,4 +24,4 @@ MusixPlayer is official repository of MusixPlayer.com which is a project for CS5
 
 [Plyr.io](https://plyr.io/)
 
-
+[Stackoverflow](https://stackoverflow.com/questions/1403615/use-jquery-to-hide-a-div-when-the-user-clicks-outside-of-it) : To close search box when clicked outside
