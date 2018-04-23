@@ -1,19 +1,21 @@
 # musixplayer
 MusixPlayer is official repository of MusixPlayer.com which is a project for CS5200 (Northeastern University)
 
-Steps for Installation
+#Steps for Installation
 Clone Github Repository
 Open Intellij
 File > Open and choose the downloaded/cloned repository path
 Install Lombok, from https://projectlombok.org/setup/intellij
 Run
 Open http://localhost:8080
-Steps for Configuration
+
+
+#Steps for Configuration
 Open src/main/java/resources/application.properties and change data source if you want to use custom database.
 
 
 
-Credits / References
+#Credits / References
 
 4 API's have been used in this project
 
