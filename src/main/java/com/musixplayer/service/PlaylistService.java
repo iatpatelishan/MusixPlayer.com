@@ -24,4 +24,8 @@ public class PlaylistService {
         return playlistRepository.findById(id);
     }
 
+    public void delete(Playlist playlist){
+        playlistRepository.delete(playlist);
+    }
+
 }

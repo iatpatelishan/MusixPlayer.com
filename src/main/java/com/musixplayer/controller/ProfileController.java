@@ -47,12 +47,11 @@ public class ProfileController {
     @GetMapping("/{username}/")
     public ModelAndView getProfileDetails(ModelAndView modelAndView, @PathVariable("username") String username, Principal principal) {
         Person profile = personService.findByUsername(username).orElse(null);
-        if(profile.getRole().getName().equals("ARTIST")){
+        if (profile.getRole().getName().equals("ARTIST")) {
             Artist profileartist = artistService.findByUsername(username).orElse(null);
             System.out.println("ARTIST PROFILE REQUESTED");
             modelAndView.addObject("profile", profileartist);
-        }
-        else{
+        } else {
             modelAndView.addObject("profile", profile);
         }
 
@@ -85,18 +84,17 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser!=null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
+            if (mxuser != null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
                 modelAndView.addObject("mxuser", mxuser);
                 modelAndView.setViewName("editprofile");
                 return modelAndView;
-            }
-            else {
+            } else {
                 modelAndView.setViewName("error/403");
                 return modelAndView;
             }
         }
 
-        modelAndView.setViewName("redirect: "+requestURI);
+        modelAndView.setViewName("redirect: " + requestURI);
         return modelAndView;
     }
 
@@ -111,8 +109,8 @@ public class ProfileController {
         Person loggedinPerson = personService.findByUsername(principal.getName()).orElse(null);
         Person toEditPerson = personService.findByUsername(username).orElse(null);
 
-        if(loggedinPerson.getUsername().equals(toEditPerson.getUsername())  || loggedinPerson.getRole().getName().equals("ADMIN")){
-            if(email!=null){
+        if (loggedinPerson.getUsername().equals(toEditPerson.getUsername()) || loggedinPerson.getRole().getName().equals("ADMIN")) {
+            if (email != null) {
                 Person emailExists = personService.findByEmail(email).orElse(null);
                 if (emailExists != null && !emailExists.getUsername().equals(toEditPerson.getUsername())) {
                     modelAndView.addObject("alreadyRegisteredMessage", "Oops!  This email has been used already!");
@@ -125,18 +123,18 @@ public class ProfileController {
                 toEditPerson.setEmail(email);
                 String emailHash;
                 try {
-                    MessageDigest m=MessageDigest.getInstance("MD5");
-                    m.update(email.getBytes(),0,email.length());
-                    emailHash = new BigInteger(1,m.digest()).toString(16);
+                    MessageDigest m = MessageDigest.getInstance("MD5");
+                    m.update(email.getBytes(), 0, email.length());
+                    emailHash = new BigInteger(1, m.digest()).toString(16);
                 } catch (NoSuchAlgorithmException e) {
-                    emailHash="";
+                    emailHash = "";
                 }
                 toEditPerson.setEmailHash(emailHash);
             }
-            if(firstName!=null){
+            if (firstName != null) {
                 toEditPerson.setFirstName(firstName);
             }
-            if(lastName!=null){
+            if (lastName != null) {
                 toEditPerson.setLastName(lastName);
             }
             personService.create(toEditPerson);
@@ -154,12 +152,11 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser!=null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
+            if (mxuser != null && (mxuser.getRole().getName().equals("ADMIN") || profile.getUsername().equals(mxuser.getUsername()))) {
                 modelAndView.addObject("mxuser", mxuser);
                 modelAndView.setViewName("createplaylist");
                 return modelAndView;
-            }
-            else {
+            } else {
                 modelAndView.setViewName("error/403");
                 return modelAndView;
             }
@@ -185,13 +182,13 @@ public class ProfileController {
                 Playlist playlist = new Playlist();
                 playlist.setName(name);
                 playlist.setCreatedBy(profile);
-                playlist=playlistService.create(playlist);
+                playlist = playlistService.create(playlist);
             } else {
                 modelAndView.setViewName("error/403");
                 return modelAndView;
             }
         }
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
 
     }
@@ -200,7 +197,7 @@ public class ProfileController {
     @PostMapping("/{username}/playlist/addsong")
     public ModelAndView addSongToPlaylist(ModelAndView modelAndView, RedirectAttributes redir, @PathVariable("username") String username, @RequestParam Map requestParams, BindingResult bindingResult, Principal principal) {
         String playlistReqId = (String) requestParams.get("playlistid");
-        if(playlistReqId==null){
+        if (playlistReqId == null) {
             modelAndView.setViewName("error/403");
             return modelAndView;
         }
@@ -218,20 +215,20 @@ public class ProfileController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
-            if (mxuser != null && playlist != null && song!=null && profile.getUsername().equals(mxuser.getUsername())) {
-                if(playlist.getSongs()==null){
+            if (mxuser != null && playlist != null && song != null && profile.getUsername().equals(mxuser.getUsername())) {
+                if (playlist.getSongs() == null) {
                     playlist.setSongs(new ArrayList<Song>());
                 }
-                if(!playlist.getSongs().contains(song)){
+                if (!playlist.getSongs().contains(song)) {
                     playlist.getSongs().add(song);
                 }
-                playlist=playlistService.create(playlist);
+                playlist = playlistService.create(playlist);
             } else {
                 modelAndView.setViewName("error/403");
                 return modelAndView;
             }
         }
-        modelAndView.setViewName("redirect:"+requestURI);
+        modelAndView.setViewName("redirect:" + requestURI);
         return modelAndView;
 
     }
@@ -266,23 +263,20 @@ public class ProfileController {
     @PostMapping("/{username}/delete")
     public ModelAndView deleteProfile(@PathVariable("username") String username, ModelAndView modelAndView, BindingResult bindingResult, Principal principal, HttpSession session, HttpServletRequest request) {
 
-        String requestURI="/";
+        String requestURI = "/";
         Person person = personService.findByUsername(principal.getName()).orElse(null);
         String currentUserRole = person.getRole().getName();
 
-        if (username.equals(principal.getName())||currentUserRole.equals("ADMIN")){
+        if (username.equals(principal.getName()) || currentUserRole.equals("ADMIN")) {
 
-            if(username.equals(principal.getName())){
+            if (username.equals(principal.getName())) {
 
                 request.getSession().invalidate();
             }
             personService.deletePerson(username);
-            modelAndView.setViewName("redirect:"+requestURI);
-        }
-
-        else
-        {
-            modelAndView.setViewName("redirect:"+requestURI+"?wronguser");
+            modelAndView.setViewName("redirect:" + requestURI);
+        } else {
+            modelAndView.setViewName("redirect:" + requestURI + "?wronguser");
         }
 
         return modelAndView;

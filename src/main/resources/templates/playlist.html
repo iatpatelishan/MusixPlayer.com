@@ -16,7 +16,10 @@
         <br/>
         <div class="row">
             <div class="col-12">
-                <button type="button" class="btn btn-danger " style="float: right">Delete Playlist</button><h1><span th:text="${playlist.getName()}"></span> </h1>
+                <form sec:authorize="isAuthenticated()"  th:if="${playlist.getCreatedBy().getUsername()}==${#authentication.name}  or ${mxuser.getRole().getName()}=='ADMIN'" th:action="'/playlist/'+${playlist.getId()}+'/delete'" method="POST">
+                    <button type="submit" class="btn btn-danger"  style="float: right">Delete Playlist</button>
+                </form>
+                <h1><span th:text="${playlist.getName()}"></span> </h1>
                 <h6><a th:href="'/profile/'+${playlist.getCreatedBy().getUsername()}+'/'" th:text="'By '+${playlist.getCreatedBy().getUsername()}"></a></h6>
             </div>
 
@@ -36,7 +39,11 @@
                         <a th:href="'/song/' + ${song.getMbId()}">  <img class="card-img-top" th:src="${song.getImageUrl()}" alt="Card image cap" style="height:100%;width:100%"></a>
                         <div class="card-body">
                             <h5 class="card-title" ><a th:href="'/song/' + ${song.getMbId()}" th:text="${song.getName()}"></a></h5>
-                            <button type="button" class="btn btn-danger btn-sm">Remove Song</button>
+                            <form sec:authorize="isAuthenticated()" th:if="${playlist.getCreatedBy().getUsername()}==${#authentication.name}  or ${mxuser.getRole().getName()}=='ADMIN'"  th:action="'/playlist/'+${playlist.getId()}+'/deletesong'" method="POST">
+                                <input type="hidden" name="mbid" th:value="${song.getMbId()}">
+                                <button type="submit" class="btn btn-danger btn-sm">Remove Song</button>
+                            </form>
+
                         </div>
                     </div>
                 </div>

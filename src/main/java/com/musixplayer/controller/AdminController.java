@@ -100,12 +100,21 @@ public class AdminController {
         String confirmationToken = UUID.randomUUID().toString();
         String usertype = (String) requestParams.get("usertype");
 
-        Person personExists = personService.findByEmail(email).orElse(null);
+        Person emailExists = personService.findByEmail(email).orElse(null);
 
-        if (personExists != null) {
+        if (emailExists != null) {
             modelAndView.addObject("alreadyRegisteredMessage", "Oops!  This email has been used already!");
             modelAndView.setViewName("admin/createuser");
             bindingResult.reject("email");
+            return modelAndView;
+        }
+
+        Person usernameExists = personService.findByUsername(username).orElse(null);
+
+        if (usernameExists != null) {
+            modelAndView.addObject("alreadyRegisteredMessage", "Username already Exists.");
+            modelAndView.setViewName("admin/createuser");
+            bindingResult.reject("username");
             return modelAndView;
         }
 
