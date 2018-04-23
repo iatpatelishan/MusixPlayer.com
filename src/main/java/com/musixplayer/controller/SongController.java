@@ -48,9 +48,18 @@ public class SongController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            Optional<Person> mxuser = personService.findByUsername(principal.getName());
-            if (mxuser.isPresent()) {
-                modelAndView.addObject("mxuser", mxuser.get());
+            Person mxuser = personService.findByUsername(principal.getName()).orElse(null);
+            if (mxuser!=null) {
+                modelAndView.addObject("mxuser", mxuser);
+                String currentUserRole = mxuser.getRole().getName();
+                boolean songowner= false;
+                if(currentUserRole.equals("ARTIST")){
+                    Artist mxartist = artistService.findByUsername(principal.getName()).orElse(null);
+                    if(mxartist.getArtistData().getSongs().contains(song)){
+                        songowner=true;
+                        modelAndView.addObject("mxuserIsOwner", songowner);
+                    }
+                }
             }
         }
 

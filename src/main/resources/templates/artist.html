@@ -44,12 +44,14 @@
                 <h4>Description</h4>
                 <p><span th:utext="${artistDescription}"></span></p>
                 <br>
-                <h4 th:if="${artistPersonUsername}"><a th:href="'/profile/'+${artistPersonUsername}+'/'">Visit Artist Profile</a></h4>
+                <h4 th:if="${artistPersonUsername}"><a th:href="'/profile/'+${artistPersonUsername}+'/'">Visit Artist
+                    Profile</a></h4>
                 <br>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item"><h3>Songs by this artist</h3></li>
                     <div class="card" th:each="song : ${listOfSongs}" th:if="listOfSongs != null">
-                        <li class="list-group-item "><a th:href="'/song/' + ${song.getMbId()}"><span th:text="${song.getName()}"></span></a></li>
+                        <li class="list-group-item "><a th:href="'/song/' + ${song.getMbId()}"><span
+                                th:text="${song.getName()}"></span></a></li>
                     </div>
                 </ul>
 
@@ -93,32 +95,41 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-3">
-                                                <img title="profile image" class="img-circle img-responsive"
-                                                     th:src="'https://www.gravatar.com/avatar/'+${artistReview.getArtistReviewer().getEmailHash()}+'?s=48&d=robohash'"
-                                                     style="border-radius: 50%">
-                                                <h6 class="card-title mb-2 text-muted text-capitalize col-centered"
-                                                    th:text="${artistReview.getArtistReviewer().getUsername()} + '  '"></h6>
+                                                <a th:href="'/profile/'+${artistReview.getArtistReviewer().getUsername()}+'/'">
+                                                    <img title="profile image" class="img-circle img-responsive"
+                                                         th:src="'https://www.gravatar.com/avatar/'+${artistReview.getArtistReviewer().getEmailHash()}+'?s=48&d=robohash'"
+                                                         style="border-radius: 50%">
+                                                </a>
+                                                <h6 class="card-title mb-2 text-muted text-capitalize col-centered"><a
+                                                        th:href="'/profile/'+${artistReview.getArtistReviewer().getUsername()}+'/'"
+                                                        th:text="${artistReview.getArtistReviewer().getUsername()} + '  '"></a>
+                                                </h6>
                                                 <form action="/artistreview/flag" method="POST">
-                                                    <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                    <input type="hidden" th:value="${artistReview.getId()}"
+                                                           name="artistreviewid"/>
                                                     <input type="hidden" th:value="${artistMbid}" name="mbid"/>
                                                     <button type="submit" class="btn btn-danger btn-sm">Flag</button>
                                                 </form>
                                             </div>
                                             <div class="col-8">
-                                                <p class="card-text reviewprintedtext" th:text="${artistReview.getReview()}"></p>
-                                                <p class="card-text reviewprintedtext" th:text="'Rating: '+${artistReview.getRating()}"></p>
+                                                <p class="card-text reviewprintedtext"
+                                                   th:text="${artistReview.getReview()}"></p>
+                                                <p class="card-text reviewprintedtext"
+                                                   th:text="'Rating: '+${artistReview.getRating()}"></p>
                                                 <p class="alert alert-dismissible alert-warning"
-                                                   th:if="${artistReview.getFlagged()}==true">This Review is Flagged!</p>
-                                                <div class="row" sec:authorize="isAuthenticated()"
-                                                     th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                                   th:if="${artistReview.getFlagged()}==true">This Review is
+                                                    Flagged!</p>
+                                                <div class="row" sec:authorize="isAuthenticated()">
 
-                                                    <form action="/artistreview/delete" method="POST">
-                                                        <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                    <form action="/artistreview/delete" method="POST" class="deletereview" th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                                        <input type="hidden" th:value="${artistReview.getId()}"
+                                                               name="artistreviewid"/>
                                                         <input type="hidden" th:value="${artistMbid}" name="mbid"/>
-                                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Delete
+                                                        </button>
                                                     </form>
 
-                                                    <form action="/artistreview/edit" method="POST" class="editform">
+                                                    <form action="/artistreview/edit" method="POST" class="editform" th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
                                                 <textarea class="form-control" rows="3" name="reviewtext"
                                                           th:text="${artistReview.getReview()}"></textarea>
                                                         <div class="form-group row">
@@ -132,11 +143,13 @@
                                                                 </select>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" th:value="${artistReview.getId()}" name="artistreviewid"/>
+                                                        <input type="hidden" th:value="${artistReview.getId()}"
+                                                               name="artistreviewid"/>
                                                         <input type="hidden" th:value="${artistMbid}" name="mbid"/>
-                                                        <button type="submit" class="btn btn-danger btn-sm">Edit</button>
+                                                        <button type="submit" class="btn btn-danger btn-sm">Edit
+                                                        </button>
                                                     </form>
-                                                    <button class="btn btn-danger btn-sm editbutton">Edit</button>
+                                                    <button class="btn btn-danger btn-sm editbutton" th:if="${artistReview.getArtistReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'" >Edit</button>
                                                 </div>
                                             </div>
 
@@ -151,16 +164,19 @@
         </div>
     </div>
 </div>
-    <!-- /.container -->
-    <div th:replace="fragments/footer :: footer"/>
+<!-- /.container -->
+<div th:replace="fragments/footer :: footer"/>
 
 <script>
     $(document).ready(function () {
+        $('.combostar').combostars();
         $('.editform').toggle();
         $('.editbutton').on('click', function () {
             $(this).siblings('.editform').toggle();
             $(this).toggle();
             $(this).parent().siblings('.reviewprintedtext').toggle();
+            $(this).siblings('.deletereview').toggle();
+            $(this).siblings('.likereview').toggle();
         })
     });
 
@@ -217,12 +233,5 @@
         });
     })();
 </script>
-
-<script>
-    $(function () {
-        $('.combostar').combostars();
-    });
-</script>
-
 </body>
 </html>

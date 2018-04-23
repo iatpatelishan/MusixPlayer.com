@@ -99,7 +99,7 @@
                                         <div><a th:href="'/profile/'+${mxuser.getUsername()}+'/playlist/create'"
                                                 class="btn btn-outline-info " style="float: left;">Create Playlist</a>
                                             <form action="/song/delete" method="POST" sec:authorize="isAuthenticated()"
-                                                  th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                                  th:if="${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR' or ${mxuserIsOwner}==true">
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
                                                 <button type="submit" class="btn btn-danger"
                                                         style="float: left; margin-left: 5px;">
@@ -218,10 +218,9 @@
                                            th:text="'Rating: '+${review.getRating()}"></p>
                                         <p class="alert alert-dismissible alert-warning"
                                            th:if="${review.getFlagged()}==true">This Review is Flagged!</p>
-                                        <div class="row" sec:authorize="isAuthenticated()"
-                                             th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
+                                        <div class="row" sec:authorize="isAuthenticated()">
 
-                                            <form action="/review/delete" method="POST" class="deletereview">
+                                            <form action="/review/delete" method="POST" class="deletereview" th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
                                                 <input type="hidden" th:value="${review.getId()}" name="reviewid"/>
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
                                                 <button type="submit" class="btn btn-danger btn-sm"  style="margin-left:10px;">Delete</button>
@@ -240,7 +239,7 @@
                                             </form>
 
 
-                                            <form action="/review/edit" method="POST" class="editform">
+                                            <form action="/review/edit" method="POST" class="editform" th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">
                                                 <textarea class="form-control" rows="3" name="reviewtext"
                                                           th:text="${review.getReview()}"></textarea>
                                                 <div class="form-group row">
@@ -258,7 +257,7 @@
                                                 <input type="hidden" th:value="${songMbid}" name="mbid"/>
                                                 <button type="submit" class="btn btn-danger btn-sm"  style="margin-left:10px;">Edit</button>
                                             </form>
-                                            <button class="btn btn-danger btn-sm editbutton"  style="margin-left:10px;">Edit</button>
+                                            <button class="btn btn-danger btn-sm editbutton"  style="margin-left:10px;"  th:if="${review.getReviewer().getUsername()}==${#authentication.name} or ${mxuser.getRole().getName()}=='ADMIN'  or ${mxuser.getRole().getName()}=='EDITOR'">Edit</button>
 
 
 
