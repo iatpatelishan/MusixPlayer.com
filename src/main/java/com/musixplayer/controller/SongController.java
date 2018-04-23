@@ -130,8 +130,7 @@ public class SongController {
                     }
                 }
 
-                if(currentUserRole.equals("ADMIN") || currentUserRole.equals("ADMIN") || songowner){
-
+                if(currentUserRole.equals("ADMIN") || currentUserRole.equals("EDITOR") || songowner){
                     songService.deleteSongByMbid(songMbid);
                 }
 
