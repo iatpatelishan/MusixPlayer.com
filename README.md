@@ -1,4 +1,4 @@
-# musixplayer
+# MusixPlayer.com
 MusixPlayer is official repository of MusixPlayer.com which is a project for CS5200 (Northeastern University)
 
 [Installation/Configuration](https://github.com/iatpatelishan/cs5200-spring-2018-musixplayer/wiki/Installation-And-Configuration) 
@@ -6,17 +6,15 @@ MusixPlayer is official repository of MusixPlayer.com which is a project for CS5
 
 
 
-#Credits / References
+##  Credits / References
 
-4 API's have been used in this project
+[Last.fm](http://last.fm) : to fetch songs and artist data
 
-Last.fm : to fetch songs and artist data
+[ApiSeeds](https://apiseeds.com/documentation/lyrics) : to fetch lyrics of songs
 
-ApiSeeds : to fetch lyrics of songs
+[Youtube](https://developers.google.com/api-client-library/java/apis/youtube/v3) : to fetch song
 
-YouTube : to fetch song
-
-Gravatar : to fetch user's profile image from email id
+[Gravatar](https://gravatar.com) : to fetch user's profile image from email id
 
 [Bootstrap/Bootswatch](https://bootswatch.com/)  : for bootstrap starter template
 
