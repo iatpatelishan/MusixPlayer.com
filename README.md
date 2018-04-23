@@ -8,20 +8,20 @@ MusixPlayer is official repository of MusixPlayer.com which is a project for CS5
 
 ##  Credits / References
 
-[Last.fm](http://last.fm) : to fetch songs and artist data
+[Last.fm](http://last.fm) : To fetch songs and artist data
 
-[ApiSeeds](https://apiseeds.com/documentation/lyrics) : to fetch lyrics of songs
+[ApiSeeds](https://apiseeds.com/documentation/lyrics) : To fetch lyrics of songs
 
-[Youtube](https://developers.google.com/api-client-library/java/apis/youtube/v3) : to fetch song
+[Youtube](https://developers.google.com/api-client-library/java/apis/youtube/v3) : To fetch song
 
-[Gravatar](https://gravatar.com) : to fetch user's profile image from email id
+[Gravatar](https://gravatar.com) : To fetch user's profile image from email id
 
-[Bootstrap/Bootswatch](https://bootswatch.com/)  : for bootstrap starter template
+[Bootstrap/Bootswatch](https://bootswatch.com/)  : For bootstrap starter template
 
 [Star Rating Plugin](https://www.jqueryscript.net/other/Simple-Select-Based-Star-Rating-Plugin-with-jQuery-ComboStars.html) : To display ratings stars
 
-[Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html) : Templating Enginer
+[Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html) : Templating Engine
 
-[Plyr.io](https://plyr.io/) : to play music
+[Plyr.io](https://plyr.io/) : To play music
 
 [Stackoverflow](https://stackoverflow.com/questions/1403615/use-jquery-to-hide-a-div-when-the-user-clicks-outside-of-it) : To close search box when clicked outside
