@@ -18,10 +18,10 @@ MusixPlayer is official repository of MusixPlayer.com which is a project for CS5
 
 [Bootstrap/Bootswatch](https://bootswatch.com/)  : for bootstrap starter template
 
-[Star Rating Plugin](https://www.jqueryscript.net/other/Simple-Select-Based-Star-Rating-Plugin-with-jQuery-ComboStars.html)
+[Star Rating Plugin](https://www.jqueryscript.net/other/Simple-Select-Based-Star-Rating-Plugin-with-jQuery-ComboStars.html) : To display ratings stars
 
-[Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html)
+[Thymeleaf](https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf.html) : Templating Enginer
 
-[Plyr.io](https://plyr.io/)
+[Plyr.io](https://plyr.io/) : to play music
 
 [Stackoverflow](https://stackoverflow.com/questions/1403615/use-jquery-to-hide-a-div-when-the-user-clicks-outside-of-it) : To close search box when clicked outside
